@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>标题</title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/center.css" />
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="header">
+				<a class="logo" href="www.shangxiahui.com"><img src="image/logo.jpg" alt=""></a>
+				<!--
+				<div class="search">
+					<form action="/center/search">
+						<input type="text" placeholder="搜索" name="search" />
+					</form>
+				</div>
+				-->
+				<div class="actions">
+					<a href="/center">
+						<img src="" alt="">
+						<span></span>
+					</a>
+					<a href="/center/profile"><span>设置</span></a>
+					<a href="/logout"><span>退出</span></a>
+				</div>
+			</div>
+		<div class="container">
+			<div class="sidebar">
+				<ul class="profile">
+					<li class="clearfix">
+						<a href=""><img class="author-picture" src="image/picture.jpg"></a> 
+						<a class="author-name" href="">Tipine</a>
+					</li>
+					<li class="cur"><a href="/center/profile/basic">基本设置</a></li>
+					<li><a href="/center/profile/password">修改密码</a></li>
+					<li><a href="/center/profile/avatar">设置头像</a></li>
+				</ul>
+			</div>
+			<div class="main">
+				<div class="main-header">
+					<h2>基本设置</h2>
+				</div>
+				<div class="main-content">
+					<form action="/center/basic" method="post">
+						<table>
+							<tr><th>昵称：</th><td><input type="text" disabled name="nickname" value="" /></td></tr>
+							<tr><th>Email：</th><td><input type="text" name="email" value="" /></td></tr>
+							<tr><th>QQ：</th><td><input type="text" name="qq"  value="" /></td></tr>
+							<tr><th>Weibo：</th><td><input type="text" name="weibo" value="" /></td></tr>
+							<tr><th></th><td><input type="submit" value="更新" /></td></tr>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+			<div class="footer">
+				<ul class="footer-left">
+					<li><a href="">常用功能一</a></li>
+					<li><a href="">常用功能二</a></li>
+				</ul>
+				<a class="footer-logo" href="www.shangxiahui.com"><img src="image/logo.jpg" /></a>
+				<ul class="footer-right">
+					<li><a href="">常用功能三</a></li>
+					<li><a href="">常用功能四</a></li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

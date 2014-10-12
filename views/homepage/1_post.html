@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>标题</title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/homepage.css" />
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="header">
+				<a class="logo" href="www.shangxiahui.com"><img src="image/logo.jpg" alt=""></a>
+				<div class="actions">
+					<a href="/center">
+						<img src="" alt="">
+						<span></span>
+					</a>
+					<a href="/center/profile"><span>设置</span></a>
+					<a href="/logout"><span>退出</span></a>
+				</div>
+			</div>
+		<div class="container">
+			<div class="sidebar floatr">
+				<ul class="author-info">
+					<li class="clearfix"><a href=""><img class="author-picture" src="image/picture.jpg"></a> <a class="author-name" href="">Tipine</a></li>
+					<li>QQ: <span>466586808</span></li>
+					<li>Weibo: <span>Jianbo</span></li>
+					<li class="user-action"><a href="javascript:void(0)">关注他</a> <a href="javascript:void(0)">发私信</a></li>
+				</ul>
+				<ul class="post-action">
+					<li>文章数据</li>
+					<li>
+						<a href="javascript:void(0);" id="postCollect">收藏</a>
+						<span class="collect">x300</span>
+					</li>
+					<li>
+						<a href="javascript:void(0);" id="postLike">点赞</a>
+						<span class="like">x300</span>
+					</li>
+					<li>
+						<a href="javascript:void(0);" id="postShare">分享</a>
+						<span class="share">x300</span>
+					</li>
+				</ul>
+			</div>
+			<div class="main marginl">
+				<div class="main-header">
+					<h2>标题</h2>
+					<div class="post-data">
+						发表于：<span>2012-14-12</span>
+						阅读：<span>x123</span>
+						来源：<span>http://www.baidu.com</span>
+					</div>
+				</div>
+				<div class="post-content">
+					文章内容
+				</div>
+				<div class="post-comment">
+					<h2>评论</h2>
+					<ul class="comment-list">
+						<li>
+							<div class="author-info">
+								<a href=""><img class="author-picture" src="image/picture.jpg" alt=""></a>
+							</div>
+							<div class="comment-content">
+								<a href="">Tom：</a><span class="content-main">评论内容评论内容评论内容评论内容</span>
+								<div class="comment-action">
+									<span>10票</span>
+									<a href="javascript:void(0);" class="agree-comment">赞成</a>
+									<a href="javascript:void(0);" class="open-subComment-form">回复</a>
+								</div>
+							</div>
+							<ul class="comment-more">
+								<li>
+									<div class="author-info">
+										<a href=""><img class="author-picture" src="image/picture.jpg" alt=""></a>
+									</div>
+									<div class="sub-comment-content">
+										<a href="">Tom：</a><span class="content-main">评论内容评论内容评论内容</span>
+										<div class="comment-action">
+											<span>10票</span>
+											<a href="javascript:void(0);" class="agree-comment">赞成</a>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<div class="comment-replay"></div>
+						</li>
+					</ul>
+					<div class="comment-action">
+						<form action="/comment/content" class="comment-form" id="comment-form" method="post">
+							<input type="hidden" name="postId" value="" />
+							<textarea name="comment" id="" cols="30" rows="10">发表评论吧</textarea>
+							<div  class="form-submit"><input type="submit" value="评论"></div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="post-collect" id="post-collect-form"></div>
+		<div class="post-share" id="post-share-form"></div>
+			<div class="footer">
+				<ul class="footer-left">
+					<li><a href="">常用功能一</a></li>
+					<li><a href="">常用功能二</a></li>
+				</ul>
+				<a class="footer-logo" href="www.shangxiahui.com"><img src="image/logo.jpg" /></a>
+				<ul class="footer-right">
+					<li><a href="">常用功能三</a></li>
+					<li><a href="">常用功能四</a></li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

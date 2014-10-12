@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>标题</title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/center.css" />
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="header">
+				<a class="logo" href="www.shangxiahui.com"><img src="image/logo.jpg" alt=""></a>
+				<div class="actions">
+					<a href="/center">
+						<img src="" alt="">
+						<span></span>
+					</a>
+					<a href="/center/profile"><span>设置</span></a>
+					<a href="/logout"><span>退出</span></a>
+				</div>
+			</div>
+		<div class="container">
+			<div class="search">
+				<form>
+				搜索：<input type="text" name="searchKey" placeholder="文章标题，作者" value="" /> <input type="submit" value="确认" />
+				</form>
+			</div>
+			<div class="sidebar">
+				<ul class="author-info">
+					<li class="clearfix"><a href=""><img class="author-picture" src="image/picture.jpg"></a> <a class="author-name" href="">Tipine</a></li>
+					<li>QQ: <span>466586808</span></li>
+					<li>Weibo: <span>Jianbo</span></li>
+				</ul>
+				<ul class="common">
+					<li class="title">我的博客</li>
+					<li><span class="post"></span><a href="/center/posts">博客</a></li>
+					<li><span class="category"></span><a href="/center/category">分类</a></li>
+					<li><span class="tags"></span><a href="/center/tag">标签</a></li>
+				</ul>
+				<ul class="dynamic">
+					<li class="title">我的动态</li>
+					<li><span class="message"></span><a href="/center/message">私信</a></li>
+					<li class="cur"><span class="collect"></span><a href="/center/collect">收藏</a></li>
+					<li><span class="follow"></span><a href="/center/follow">关注</a></li>
+					<li><span class="share"></span><a href="/center/share">分享</a></li>
+					<li><span class="like"></span><a href="/center/like">点赞</a></li>
+					<li><span class="comment"></span><a href="/center/comment">评论</a></li>
+				</ul>
+			</div>
+			<div class="main">
+				<div class="main-header">
+					<div class="search">
+						<form action="/collect/search">
+							<span>搜索：</span>
+							<input type="text" name="key" />
+							<input type="submit" value="搜索" />
+						</form>
+					</div>
+					<h2>我的收藏</h2>
+				</div>
+				<ul class="collect-list clearfix">
+					<li>
+						<div class="collect-action">
+							<a href="" target="_blank">查看</a>
+							<a href="javascript:void(0);" collect-id="" class="remove-collect">移除</a>
+						</div>
+						<a href=""><img class="author-picture" src="image/picture.jpg" alt=""></a>
+						<a href="#">作者：</a>
+						<a href="#">文章题目</a>
+						<p><span>收藏时间：2012-04-12</span></P>
+					</li>
+					<li>
+						<div class="collect-action">
+							<a href="" target="_blank">查看</a>
+							<a href="javascript:void(0);" collect-id="" class="remove-collect">移除</a>
+						</div>
+						<a href=""><img class="author-picture" src="image/picture.jpg" alt=""></a>
+						<a href="#">作者：</a>
+						<a href="#">文章题目</a>
+						<p><span>收藏时间：2012-04-12</span></P>
+					</li>
+				</ul>
+				<div class="paginate-container">
+					<div class="pagination">
+					<span class="previous_page disabled">Previous</span> 
+					<em class="current">1</em> 
+					<a rel="next" href="">2</a> 
+					<a href="">3</a> 
+					<a href="">4</a> 
+					<a href="">5</a> 
+					<span class="gap">…</span> 
+					<a href="">99</a> 
+					<a href="">100</a> 
+					<a class="next_page" rel="next" href="">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+			<div class="footer">
+				<ul class="footer-left">
+					<li><a href="">常用功能一</a></li>
+					<li><a href="">常用功能二</a></li>
+				</ul>
+				<a class="footer-logo" href="www.shangxiahui.com"><img src="image/logo.jpg" /></a>
+				<ul class="footer-right">
+					<li><a href="">常用功能三</a></li>
+					<li><a href="">常用功能四</a></li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

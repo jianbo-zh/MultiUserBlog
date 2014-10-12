@@ -1,0 +1,13 @@
+<%- include ./header %>
+		<div class="container">
+			<div class="login-form">
+				<form action="/login" method="post" id="login-form">
+				<table>
+					<tr><td>帐号：</td><td><input type="text" name="account" value="" placeholder="邮箱地址" /></td></tr>
+					<tr><td>密码：</td><td><input type="text" name="password" value="" /></td></tr>
+					<tr><td></td><td><input type="submit" value="登录" /> <a href="">忘记密码？</a></td></tr>
+				</table>
+				</form>
+			</div>
+		</div>
+<%- include ./footer %>

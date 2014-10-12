@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>标题</title>
+		<%- preCss %>
+		<%- preJs %>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="header">
+				<a class="logo" href="www.shangxiahui.com"><img src="images/logo.jpg" alt=""></a>
+				<div class="actions">
+					<a href="/center">
+						<img src="" alt="">
+						<span></span>
+					</a>
+					<a href="/center/profile"><span>设置</span></a>
+					<a href="/logout"><span>退出</span></a>
+				</div>
+			</div>
+		<div class="container">
+			<div class="login-form">
+				<form action="/register" method="post" id="register-form">
+					<table>
+						<tr><td>邮箱：</td><td><input type="text" name="email" value="" placeholder="邮箱地址" /></td></tr>
+						<tr><td>昵称：</td><td><input type="text" name="nickname" value="" /></td></tr>
+						<tr><td>微博：</td><td><input type="text" name="weibo" value="" /></td></tr>
+						<tr><td>QQ：</td><td><input type="text" name="qq" value="" /></td></tr>
+						<tr><td>密码：</td><td><input type="text" name="password" value="" /></td></tr>
+						<tr><td>确认密码：</td><td><input type="text" name="repassword" value="" /></td></tr>
+						<tr><td></td><td><input type="submit" value="注册" /></td></tr>
+					</table>
+				</form>
+			</div>
+		</div>
+			<div class="footer">
+				<ul class="footer-left">
+					<li><a href="">常用功能一</a></li>
+					<li><a href="">常用功能二</a></li>
+				</ul>
+				<a class="footer-logo" href="www.shangxiahui.com"><img src="images/logo.jpg" /></a>
+				<ul class="footer-right">
+					<li><a href="">常用功能三</a></li>
+					<li><a href="">常用功能四</a></li>
+				</ul>
+			</div>
+		</div>
+		<%- sufJs %>
+	</body>
+</html>

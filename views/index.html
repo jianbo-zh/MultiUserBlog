@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>标题</title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="header">
+				<a class="logo" href="www.shangxiahui.com"><img src="image/logo.jpg" alt=""></a>
+				<!--
+				<div class="search">
+					<form action="/center/search">
+						<input type="text" placeholder="搜索" name="search" />
+					</form>
+				</div>
+				-->
+				<div class="actions">
+					<a href="/center">
+						<img src="" alt="">
+						<span></span>
+					</a>
+					<a href="/center/profile"><span>设置</span></a>
+					<a href="/logout"><span>退出</span></a>
+				</div>
+			</div>
+			<div class="container">
+				<div class="search">
+					<form>
+					搜索：<input type="text" name="searchKey" placeholder="文章标题，作者" value="" /> <input type="submit" value="确认" />
+					</form>
+				</div>
+			<!-- 
+				<div class="topic-collects">
+					<div class="topic-title">
+						<h2>标签排行前10</h2>
+					</div>
+					<ul>
+						<li><a href="">php</a><span>x300</span></li>
+						<li><a href="">Linux</a><span>x299</span></li>
+					</ul>
+				</div>
+			-->
+				<div class="topic reads">
+					<div class="title">
+						<h2>阅读排行前10</h2>
+						<select name="topic-read-10">
+							<option value="0">一周内</option>
+							<option value="0">一月内</option>
+							<option value="0">一年内</option>
+						</select>
+						<a class="more" href="#">更多</a>
+					</div>
+					<ul class="clearfix">
+						<li>
+							<a class="author" href="#"><img src="image/picture.jpg" alt=""></a>
+							<div class="summary">
+								<a class="post-title" href="">PHP性能分析</a>
+								<p><span>2012-12-23</span></p>
+							</div>
+							<span class="count">x300</span>
+						</li>
+						<li>
+							<a class="author" href="#"><img src="image/picture.jpg" alt=""></a>
+							<div class="summary">
+								<a class="post-title" href="">PHP性能分析</a>
+								<p><span>2012-12-23</span></p>
+							</div>
+							<span class="count">x300</span>
+						</li>
+					</ul>
+				</div>
+				<div class="topic collects">
+					<div class="title">
+						<h2>收藏排行前10</h2>
+						<select name="topic-collect-10">
+							<option value="0">一周内</option>
+							<option value="0">一月内</option>
+							<option value="0">一年内</option>
+						</select>
+					</div>
+					<ul class="clearfix">
+						<li>
+							<a class="author" href="#"><img src="image/picture.jpg" alt=""></a>
+							<div class="summary">
+								<a class="post-title" href="">PHP性能分析</a>
+								<p><span>2012-12-23</span></p>
+							</div>
+							<span class="count">x300</span>
+						</li>
+						<li>
+							<a class="author" href="#"><img src="image/picture.jpg" alt=""></a>
+							<div class="summary">
+								<a class="post-title" href="">PHP性能分析</a>
+								<p><span>2012-12-23</span></p>
+							</div>
+							<span class="count">x300</span>
+						</li>
+					</ul>
+				</div>
+				<div class="topic likes">
+					<div class="title">
+						<h2>点赞排行前10</h2>
+						<select name="topic-like-10">
+							<option value="0">一周内</option>
+							<option value="0">一月内</option>
+							<option value="0">一年内</option>
+						</select>
+					</div>
+					<ul class="clearfix">
+						<li>
+							<a class="author" href="#"><img src="image/picture.jpg" alt=""></a>
+							<div class="summary">
+								<a class="post-title" href="">PHP性能分析</a>
+								<p><span>2012-12-23</span></p>
+							</div>
+							<span class="count">x300</span>
+						</li>
+						<li>
+							<a class="author" href="#"><img src="image/picture.jpg" alt=""></a>
+							<div class="summary">
+								<a class="post-title" href="">PHP性能分析</a>
+								<p><span>2012-12-23</span></p>
+							</div>
+							<span class="count">x300</span>
+						</li>
+					</ul>
+				</div>
+				<div class="topic shares">
+					<div class="title">
+						<h2>分享排行前10</h2>
+						<select name="topic-share-10">
+							<option value="0">一周内</option>
+							<option value="0">一月内</option>
+							<option value="0">一年内</option>
+						</select>
+					</div>
+					<ul class="clearfix">
+						<li>
+							<a class="author" href="#"><img src="image/picture.jpg" alt=""></a>
+							<div class="summary">
+								<a class="post-title" href="">PHP性能分析</a>
+								<p><span>2012-12-23</span></p>
+							</div>
+							<span class="count">x300</span>
+						</li>
+						<li>
+							<a class="author" href="#"><img src="image/picture.jpg" alt=""></a>
+							<div class="summary">
+								<a class="post-title" href="">PHP性能分析</a>
+								<p><span>2012-12-23</span></p>
+							</div>
+							<span class="count">x300</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="footer">
+				<ul class="footer-left">
+					<li><a href="">常用功能一</a></li>
+					<li><a href="">常用功能二</a></li>
+				</ul>
+				<a class="footer-logo" href="www.shangxiahui.com"><img src="image/logo.jpg" /></a>
+				<ul class="footer-right">
+					<li><a href="">常用功能三</a></li>
+					<li><a href="">常用功能四</a></li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,36 @@
+{
+	"js" : {
+
+		"jquery.js" : "/javascripts/jquery-1.11.1.min.js",
+		"jquery.form.js" : "/javascripts/jquery.form.js",
+
+		"kindeditor.js" : "/kindeditor/kindeditor-min.js",
+		"kindeditor_zh.js" : "/kindeditor/lang/zh_CN.js",
+
+		"register.js" : "/javascripts/register.js",
+		"login.js" : "/javascripts/login.js",
+		"postAdd.js" : "/javascripts/postAdd.js",
+		
+		"category.js" : "/javascripts/category.js",
+		"posts.js" : "/javascripts/posts.js",
+		"postModify.js" : "/javascripts/postModify.js",
+		"tags.js" : "/javascripts/tags.js",
+		"post.js" : "/javascripts/post.js",
+		"messageAdd.js" : "/javascripts/messageAdd.js",
+		"messageReply.js" : "/javascripts/messageReply.js",
+		"collect.js" : "/javascripts/collect.js",
+		"follow.js" : "/javascripts/follow.js",
+		"share.js" : "/javascripts/share.js",
+		"like.js" : "/javascripts/like.js",
+		"commentDetail.js" : "/javascripts/commentDetail.js"
+	},
+	"css" : {
+
+		"reset.css" : "/stylesheets/reset.css",
+
+		"homepage.css" : "/stylesheets/homepage.css",
+		"center.css" : "/stylesheets/center.css",
+
+		"kindeditor.css" : "/kindeditor/themes/simple/simple.css"
+	}
+}

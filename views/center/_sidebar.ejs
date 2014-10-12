@@ -1,0 +1,25 @@
+<div class="sidebar">
+	<ul class="author-info">
+		<li class="clearfix">
+			<a href="/center"><img class="author-picture" src="<%- user.picture %>"></a>
+			<a class="author-name" href=""><%= user.nickname %></a>
+		</li>
+		<li>QQ: <span><%= user.qq %></span></li>
+		<li>Weibo: <span><%= user.weibo %></span></li>
+	</ul>
+	<ul class="common">
+		<li class="title">我的博客</li>
+		<li class="<%= current==='posts' ? 'cur' : '' %>"><a href="/center/posts">博客</a></li>
+		<li class="<%= current==='categories' ? 'cur' : '' %>"><a href="/center/categories">分类</a></li>
+		<li class="<%= current==='tags' ? 'cur' : '' %>"><a href="/center/tags">标签</a></li>
+	</ul>
+	<ul class="dynamic">
+		<li class="title">我的动态</li>
+		<li class="<%= current==='messages' ? 'cur' : '' %>"><a href="/center/messages">私信</a></li>
+		<li class="<%= current==='collects' ? 'cur' : '' %>"><a href="/center/collects">收藏</a></li>
+		<li class="<%= current==='follows' ? 'cur' : '' %>"><a href="/center/follows">关注</a></li>
+		<li class="<%= current==='shares' ? 'cur' : '' %>"><a href="/center/shares">分享</a></li>
+		<li class="<%= current==='likes' ? 'cur' : '' %>"><a href="/center/likes">点赞</a></li>
+		<li class="<%= current==='comments' ? 'cur' : '' %>"><a href="/center/comments">评论</a></li>
+	</ul>
+</div>

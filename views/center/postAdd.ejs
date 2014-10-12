@@ -1,0 +1,68 @@
+<%- include ../header %>
+<div class="container">
+	<%- include _search %>
+	<%- include _sidebar %>
+	<div class="main">
+		<div class="main-header">
+			<h2>新建文章</h2>
+		</div>
+		<div class="post-content clearfix">
+			<form action="/center/post" method="post" id="post-add">
+				<table>
+					<tr>
+						<td>标题：</td>
+						<td><input type="text" name="title" value=""></td>
+					</tr>
+					<tr>
+						<td>内容：</td>
+						<td>
+							<textarea name="content" style="width:690px;height:450px;"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td>标签：</td>
+						<td>
+							<input type="text" name="add-tag" placeholder="添加标签" id="add-tag" value="" />
+						</td>
+					</tr>
+					<tr>
+						<td>类别：</td>
+						<td>
+							<select name="categoryId" id="post-category">
+								<option value="0">未分类</option>
+								<option selected value="1" >PHP学习</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>选项：</td>
+						<td>
+							<p>
+								<label for="isPublic">
+									<input type="radio" checked id="isPublic" name="isPublic" value="1" /> 公开
+								</label>
+								<label for="isPrivate">
+									<input type="radio" checked id="isPrivate" name="isPublic" value="0" /> 私有
+								</label>
+							</p>
+							<p>
+								<label for="isOriginal">
+									<input type="radio" checked id="isOriginal" name="isOriginal" value="1" /> 原创
+								</label>
+								<label for="isNet">
+									<input type="radio" id="isNet" name="isOriginal" value="0" />
+									网摘 => <input type="text" id="sourceUrl" disabled name="sourceUrl" value="" />
+								</label>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="submit" submit="" value="更新"></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+<%- include ../footer %>
