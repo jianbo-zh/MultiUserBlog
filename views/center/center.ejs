@@ -17,38 +17,31 @@
 			</div>
 		</div>
 		<ul class="post-list clearfix" id="post-list">
+			<% posts.forEach(function(post){ %>
 			<li>
-				<a href=""><img class="author-picture" src="images/picture.jpg" alt=""></a>
+				<a href="/center/post/<%= post.id %>"><img class="author-picture" src="/images/picture.jpg" alt=""></a>
 				<ul class="post-data">
-					<li class="reads">阅<span>x300</span></li>
-					<li class="likes">&nbsp;赞<span>x300</span></li>
-					<li class="collects">&nbsp;藏<span>x300</span></li>
-					<li class="shares">&nbsp;享<span>x300</span></li>
+					<li class="reads">阅<span>x<%= post.statics.reads %></span></li>
+					<li class="likes">&nbsp;赞<span>x<%= post.statics.likes %></span></li>
+					<li class="collects">&nbsp;藏<span>x<%= post.statics.collects %></span></li>
+					<li class="shares">&nbsp;享<span>x<%= post.statics.shares %></span></li>
 				</ul>
 				<div class="post-title">
-					<h3><a href="">php之性能分析</a> <span>2014-12-22</span></h3>
+					<h3><a href="/center/post/<%= post.id %>"><%= post.title %></a> <span><%= post.postDate %></span></h3>
 					<p>
-					类别：<a href="">php学习</a>
-					标签：<a href="">PHP</a> <a href="">性能</a>
+					<% if(post.category){ %>
+					类别：<a href="<%= urlFn('/category/' + category.id) %>"><%= post.category.name %></a>
+					<% } %>
+					<% if(post.tags){ %>
+					标签：
+						<% post.tags.forEach(function(tag){ %> 
+							<a href="<%= urlFn('/tag/' + tag.id) %>"><%= tag.name %></a>
+						<% }); %>
+					<% } %>
 					</p>
 				</div>
 			</li>
-			<li>
-				<a href=""><img class="author-picture" src="images/picture.jpg" alt=""></a>
-				<ul class="post-data">
-					<li class="reads">阅<span>x300</span></li>
-					<li class="likes">&nbsp;赞<span>x300</span></li>
-					<li class="collects">&nbsp;藏<span>x300</span></li>
-					<li class="shares">&nbsp;享<span>x300</span></li>
-				</ul>
-				<div class="post-title">
-					<h3><a href="">php之性能分析</a> <span>2014-12-22</span></h3>
-					<p>
-					类别：<a href="">php学习</a>
-					标签：<a href="">PHP</a> <a href="">性能</a>
-					</p>
-				</div>
-			</li>
+			<% }); %>
 		</ul>
 		<div class="paginate-container">
 			<div class="pagination">

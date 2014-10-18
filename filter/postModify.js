@@ -3,6 +3,7 @@ var validator = require('validator');
 
 exports.run = function(post, cb){
 	var p = {};
+	p.id = validator.toInt(post.id);
 	p.title = validator.escape(validator.trim(post.title));
 	p.content = validator.trim(post.content);
 	p.categoryId = validator.toInt(post.categoryId);

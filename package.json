@@ -19,6 +19,7 @@
     "connect-flash": "*",
     "method-override": "*",
     "validator": "*",
-    "async": "*"
+    "async": "*",
+    "moment": "*"
   }
 }

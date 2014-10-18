@@ -13,6 +13,65 @@ var Tag = function(tag){
 	this.name = tag.name || null;
 }
 
+Tag.getTagsByPostId = function(postId, cb){
+
+	Tag.getRelByPostId(postId, function(err, rels){
+		if(err){
+			return cb(err);
+		}
+		db.getRead(function(err, db){
+			if(err){
+				return cb(err);
+			}
+			db.collection('tag', function(err, collectionTag){
+				if(err){
+					db.close();
+					return cb(err);
+				}
+				var tags = [];
+				async.each(rels, function(rel, callback){
+					collectionTag.findOne({id:rel.tagId}, function(err, tag){
+						if(err){
+							return callback(err);
+						}
+						if(tag){
+							tags.push(tag);
+						}
+						return callback();
+					});
+				}, function(err){
+					db.close();			// 成功，失败都要关闭数据库连接
+					if(err){
+						return cb(err);
+					}
+					return cb(null, tags);
+				});
+			});
+		});
+	});
+}
+
+Tag.getRelByPostId = function(postId, cb){
+	db.getRead(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('post_rel_tag', function(err, collectionPRT){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+			collectionPRT.find({postId:postId}, {fields:{tagId:1}}).toArray(function(err, docs){
+				if(err){
+					db.close();
+					return cb(err);
+				}
+				return cb(null, docs);
+			});
+		});
+	});
+}
+
 /**
  * 批量添加标签
  * @param  {int}   userId 用户ID

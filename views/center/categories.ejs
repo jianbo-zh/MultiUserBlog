@@ -1,0 +1,39 @@
+<%- include ../header %>
+		<div class="container">
+			<%- include _search %>
+			<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<h2>博客类别</h2>
+					<form action="/center/category" method="post" id="category-add">
+						<input type="text" name="name"> <input type="submit" value="新增" />
+					</form>
+				</div>
+				<ul id="category-list" class="category-list clearfix">
+					<% categories.forEach(function(category){ %>
+					<li>
+						<div class="category-action">
+							<a href="javascript:void(0);" cid="<%= category.id %>" class="edit">编辑</a>
+							<a href="javascript:void(0);" cid="<%= category.id %>" class="delete">删除</a>
+						</div>
+						<a href=""><%= category.name %></a>&nbsp;&nbsp;<span class="counts">x<%= category.postCounts %></span>
+					</li>
+					<% }); %>
+				</ul>
+				<div class="paginate-container">
+					<div class="pagination">
+					<span class="previous_page disabled">Previous</span> 
+					<em class="current">1</em> 
+					<a rel="next" href="">2</a> 
+					<a href="">3</a> 
+					<a href="">4</a> 
+					<a href="">5</a> 
+					<span class="gap">…</span> 
+					<a href="">99</a> 
+					<a href="">100</a> 
+					<a class="next_page" rel="next" href="">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<%- include ../footer %>

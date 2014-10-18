@@ -1,3 +1,4 @@
 {
-	"domain" : "http://blog.shangxiahui.com"
+	"domain" : "http://blog.shangxiahui.com",
+	"pageLimit" : 10
 }

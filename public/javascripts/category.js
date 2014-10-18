@@ -24,13 +24,13 @@ $("#category-list").find('.edit').click(function(){
 	var catInput = categoryItem.children('input');
 	catInput.select().blur(function(){
 		var that = $(this);
-		if(that.attr('oldValue') === trim(that.val())){
+		if(that.attr('oldValue') === $.trim(that.val())){
 			return;
 		}
 		$.ajax({
 			type : 'post',
 			dataType : 'json',
-			data : {cname:that.val()},
+			data : {name:that.val()},
 			url : '/center/category/' + cid,
 			success : function(res){
 				if(res.status === 'success'){

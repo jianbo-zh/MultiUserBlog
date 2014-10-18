@@ -10,10 +10,10 @@
 		"register.js" : "/javascripts/register.js",
 		"login.js" : "/javascripts/login.js",
 		"postAdd.js" : "/javascripts/postAdd.js",
+		"postModify.js" : "/javascripts/postModify.js",
 		
 		"category.js" : "/javascripts/category.js",
 		"posts.js" : "/javascripts/posts.js",
-		"postModify.js" : "/javascripts/postModify.js",
 		"tags.js" : "/javascripts/tags.js",
 		"post.js" : "/javascripts/post.js",
 		"messageAdd.js" : "/javascripts/messageAdd.js",

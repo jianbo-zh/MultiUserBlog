@@ -1,59 +1,84 @@
 <%- include ../header %>
-		<div class="container">
-			<%- include _search %>
-			<%- include _sidebar %>
-			<div class="main">
-				<div class="main-header">
-					<h2>文章修改：PHP之性能篇</h2>
-				</div>
-				<div class="post-content clearfix">
-					<form action="/center/post/" method="post" id="post-modify">
-						<table>
-							<tr>
-								<td>标题：</td>
-								<td><input type="text" name="title" value=""></td>
-							</tr>
-							<tr>
-								<td>内容：</td>
-								<td>
-									<textarea name="content" style="width:600px;height:200px;"></textarea>
-								</td>
-							</tr>
-							<tr>
-								<td>标签：</td>
-								<td>
-									<span>PHP</span>
-									<input type="hidden" name="tags[]" value="PHP" />
-									
-									<input type="text" name="add-tag" placeholder="添加标签" id="add-tag" value="" />
-								</td>
-							</tr>
-							<tr>
-								<td>类别：</td>
-								<td>
-									<select name="categoryId" id="post-category">
-										<option value="0">未分类</option>
-										<option selected value="1" >PHP学习</option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>选项：</td>
-								<td>
-									<input type="checkbox" checked id="isPublic" name="isPublic" value="1" />
-									<label for="isPublic">公开</label>
-
-									<input type="checkbox" checked id="isOriginal" name="isOriginal" value="1" />
-									<label for="isOriginal">原创</label>
-								</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><input type="submit" submit="" value="更新"></td>
-							</tr>
-						</table>
-					</form>
-				</div>
-			</div>
+<div class="container">
+	<%- include _search %>
+	<%- include _sidebar %>
+	<div class="main">
+		<div class="main-header">
+			<h2>文章修改：<%= post.title %></h2>
 		</div>
+		<div class="post-content clearfix">
+			<form action="/center/post/<%= post.id %>" method="post" id="post-modify">
+				<input type="hidden" name="id" value="<%= post.id %>" />
+				<table>
+					<tr>
+						<td>标题：</td>
+						<td><input type="text" name="title" value="<%= post.title %>"></td>
+					</tr>
+					<tr>
+						<td>内容：</td>
+						<td>
+							<textarea name="content" style="width:600px;height:200px;"><%= post.content %></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td>标签：</td>
+						<td>
+							<%
+							if(post.tags){
+							post.tags.forEach(function(tag){
+							%>
+							<span><%= tag.name %></span>
+							<input type="hidden" name="tags" value="<%= tag.name %>" />
+							<% 		});
+							} %>
+							<input type="text" name="add-tag" placeholder="添加标签" id="add-tag" value="" />
+						</td>
+					</tr>
+					<tr>
+						<td>类别：</td>
+						<td>
+							<select name="categoryId" id="post-category">
+								<option value="0">未分类</option>
+								<%
+								if(typeof categories !== 'undefined'){
+								categories.forEach(function(category){
+								%>
+								<option <% if(category.id==post.category.id){ %>selected<% } %> value="<%= category.id %>" ><%= category.name %></option>
+								<% 		});
+								}
+								%>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>选项：</td>
+						<td>
+							<p>
+							<label for="isPublic">
+								<input type="radio" <% if(post.isPublic){ %>checked<% } %> id="isPublic" name="isPublic" value="1" /> 公开
+							</label>
+							<label for="isPrivate">
+								<input type="radio" <% if(! post.isPublic){ %>checked<% } %> id="isPrivate" name="isPublic" value="0" /> 私有
+							</label>
+							</p>
+							<p>
+							<label for="isOriginal">
+								<input type="radio" <% if(post.isOriginal){ %>checked<% } %> id="isOriginal" name="isOriginal" value="1" /> 原创
+							</label>
+							<label for="isNet">
+								<input type="radio" <% if(! post.isOriginal){ %>checked<% } %> id="isNet" name="isOriginal" value="0" />
+								网摘 => <input type="text" id="sourceUrl" <% if(post.isOriginal){ %>disabled<% } %> name="sourceUrl" value="<%= post.sourceUrl %>" />
+							</label>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="submit" value="更新"></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
 <%- include ../footer %>
