@@ -30,7 +30,15 @@
 						<td>
 							<select name="categoryId" id="post-category">
 								<option value="0">未分类</option>
-								<option selected value="1" >PHP学习</option>
+								<% 
+									if(typeof categories !== 'undefined'){ 
+										categories.forEach(function(category){
+								%>
+								<option value="<%= category.id %>" ><%= category.name %></option>
+								<% 
+										});
+									} 
+								%>
 							</select>
 						</td>
 					</tr>

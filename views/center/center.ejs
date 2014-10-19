@@ -30,12 +30,12 @@
 					<h3><a href="/center/post/<%= post.id %>"><%= post.title %></a> <span><%= post.postDate %></span></h3>
 					<p>
 					<% if(post.category){ %>
-					类别：<a href="<%= urlFn('/category/' + category.id) %>"><%= post.category.name %></a>
+					类别：<a href="<%= urlFn('/center/category/' + post.category.id) %>"><%= post.category.name %></a>
 					<% } %>
 					<% if(post.tags){ %>
 					标签：
 						<% post.tags.forEach(function(tag){ %> 
-							<a href="<%= urlFn('/tag/' + tag.id) %>"><%= tag.name %></a>
+							<a href="<%= urlFn('/center/tag/' + tag.id) %>"><%= tag.name %></a>
 						<% }); %>
 					<% } %>
 					</p>

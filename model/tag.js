@@ -13,6 +13,70 @@ var Tag = function(tag){
 	this.name = tag.name || null;
 }
 
+Tag.getTagById = function(tagId, cb){
+	db.getRead(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('tag', function(err, collectionTag){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+			collectionTag.findOne({id:tagId}, function(err, tag){
+				db.close();
+				if(err){
+					return cb(err);
+				}
+				return cb(null, tag);
+			});
+		});
+	});
+}
+
+
+Tag.getTagsOfUser = function(userId, cb){
+	db.getRead(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('tag', function(err, collectionTag){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+			collectionTag.find({userId:userId}).toArray(function(err, tags){
+				db.close();
+				if(err){
+					return cb(err);
+				}
+				return cb(null, tags);
+			});
+		});
+	});
+}
+
+Tag.getPostCountOfTag = function(tagId, cb){
+	db.getRead(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('post_rel_tag', function(err, collectionTag){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+			collectionTag.count({tagId:tagId}, function(err, count){
+				db.close();
+				if(err){
+					return cb(err);
+				}
+				return cb(null, count);
+			});
+		});
+	});
+}
+
 Tag.getTagsByPostId = function(postId, cb){
 
 	Tag.getRelByPostId(postId, function(err, rels){
@@ -51,6 +115,27 @@ Tag.getTagsByPostId = function(postId, cb){
 	});
 }
 
+Tag.getRelByTagId = function(tagId, cb){
+	db.getRead(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('post_rel_tag', function(err, collectionPRT){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+			collectionPRT.find({tagId:tagId}, {fields:{postId:1}}).toArray(function(err, docs){
+				db.close();
+				if(err){
+					return cb(err);
+				}
+				return cb(null, docs);
+			});
+		});
+	});
+}
+
 Tag.getRelByPostId = function(postId, cb){
 	db.getRead(function(err, db){
 		if(err){
@@ -62,8 +147,8 @@ Tag.getRelByPostId = function(postId, cb){
 				return cb(err);
 			}
 			collectionPRT.find({postId:postId}, {fields:{tagId:1}}).toArray(function(err, docs){
+				db.close();
 				if(err){
-					db.close();
 					return cb(err);
 				}
 				return cb(null, docs);
@@ -158,6 +243,86 @@ Tag.adds = function(userId, tags, cb){
 			}
 			return cb(new Error('添加标签失败！'));
 		}
+	});
+}
+
+Tag.prototype.modify = function(cb){
+	var t = {}, tagId = this.id, userId = this.userId;
+	t.name = this.name;
+
+	db.getWrite(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('tag', function(err, collectionTag){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+			collectionTag.update({id: tagId, userId:userId}, {$set: t}, function(err, result){
+				db.close();
+				if(err){
+					return cb(err);
+				}
+				return cb(null, result);
+			});
+		});
+	});
+}
+
+
+Tag.checkUserTagIfExists = function(userId, TagName, cb){
+	db.getRead(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('tag', function(err, collectionTag){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+			collectionTag.count({userId:userId, name:TagName}, function(err, count){
+				db.close();
+				if(err){
+					return cb(err);
+				}
+				return count>0 ? cb(null, true) : cb(null, false);
+			});
+		});
+	});
+}
+
+Tag.delete = function(userId, tagId, cb){
+	db.getWrite(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('tag', function(err, collectionTag){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+			collectionTag.remove({id: tagId, userId:userId}, function(err, result){
+				if(err){
+					db.close();
+					return cb(err);
+				}
+				// 删除关联标签
+				db.collection('post_rel_tag', function(err, collectionPRT){
+					if(err){
+						db.close();
+						return cb(err);
+					}
+					collectionPRT.remove({tagId:tagId}, function(err, result){
+						db.close();
+						if(err){
+							return cb(err);
+						}
+						return cb(null, result);
+					});
+				});
+			});
+		});
 	});
 }
 

@@ -92,11 +92,24 @@ Category.delete = function(userId, categoryId, cb){
 				return cb(err);
 			}
 			collectionCategory.remove({userId:userId, id:categoryId}, function(err, result){
-				db.close();
 				if(err){
+					db.close();
 					return cb(err);
 				}
-				return cb(null, result);
+				// 重新设置对应文章的分类为未分类
+				db.collection('post', function(err, collectionPost){
+					if(err){
+						db.close();
+						return cb(err);
+					}
+					collectionPost.update({userId:userId, categoryId:categoryId}, {categoryId:0}, function(err, result){
+						db.close();
+						if(err){
+							return cb(err);
+						}
+						return cb(null, result);
+					});
+				});
 			});
 		});
 	});

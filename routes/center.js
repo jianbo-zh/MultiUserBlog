@@ -2,11 +2,14 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var commonFn = require('../lib/common.js');
+var logger = require('../lib/logger.js');
+var moment = require('moment');
 
 var fPostAdd = require('../filter/postAdd.js');
 var fPostModify = require('../filter/postModify.js');
 var fCategoryAdd = require('../filter/categoryAdd.js');
 var fCategoryModify = require('../filter/categoryModify.js');
+var fTagModify = require('../filter/tagModify.js');
 
 var PostModel = require('../model/post.js');
 var TagModel = require('../model/tag.js');
@@ -52,7 +55,13 @@ router.get('/post', function(req, res){
 	data.sufJs = commonFn.editor("content") + "\n" + commonFn.js(['postAdd.js']);
 	data.current = 'posts';
 
-	res.render('center/postAdd', data);
+	CategoryModel.getCategoriesOfUser(data.user.id, function(err, categories){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		data.categories = categories;
+		return res.render('center/postAdd', data);
+	});
 });
 
 router.get('/post/:id', function(req, res){
@@ -206,6 +215,126 @@ router.post('/category', function(req, res){
 	});
 });
 
+router.get('/category/:id', function(req, res){
+	var data = req.data,
+	categoryId = parseInt(req.params.id);
+	data.urlFn = commonFn.url;
+	data.current = 'categories';
+
+	async.parallel({
+		category : function(callback){
+			CategoryModel.getById(categoryId, callback);
+		},
+		posts : function(callback){
+
+			PostModel.getPostsByCategory(categoryId, function(err, posts){
+
+				async.eachSeries(posts, function(post, callback){
+
+					async.parallel({
+/*						category : function(callback){
+							CategoryModel.getById(post.categoryId, callback);
+						},*/
+						tags : function(callback){
+							TagModel.getTagsByPostId(post.id, callback);
+						},
+						statics : function(callback){
+							PostModel.getStatics(post.id, callback);
+						}
+					}, function(err, results){
+						if(err){
+							return callback(err);
+						}
+						/*post.category = results.category;*/
+						post.tags = results.tags;
+						post.statics = results.statics;
+						post.postDate = moment(post.postTime).format('YYYY-MM-DD');
+						return callback();
+					});
+
+				}, function(err){
+					if(err){
+						return callback(err);
+					}
+					return callback(null, posts);
+				});
+			});
+		}
+	}, function(err, results){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		data.title = '分类：' + results.category.name;
+		data.category = results.category;
+		data.posts = results.posts
+		return res.render('center/postsOfCategory', data);
+	});
+});
+
+router.get('/tag/:id', function(req, res){
+	var data = req.data;
+	data.current = 'tags';
+	data.urlFn = commonFn.url;
+	tagId = parseInt(req.params.id);
+
+	async.parallel({
+		tag : function(callback){
+			TagModel.getTagById(tagId, callback);
+		},
+		posts : function(callback){
+			TagModel.getRelByTagId(tagId, function(err, rels){
+				if(err){
+					return callback(err);
+				}
+
+				var posts = [];
+
+				async.eachSeries(rels, function(rel, callback){
+					PostModel.getPostById(rel.postId, function(err, post){
+						if(err){
+							return callback(err);
+						}
+						async.parallel({
+							category : function(callback){
+								CategoryModel.getById(post.categoryId, callback);
+							},
+							tags : function(callback){
+								TagModel.getTagsByPostId(post.id, callback);
+							},
+							statics : function(callback){
+								PostModel.getStatics(post.id, callback);
+							}
+						}, function(err, results){
+							if(err){
+								return callback(err);
+							}
+							post.category = results.category;
+							post.tags = results.tags;
+							post.statics = results.statics;
+							post.postDate = moment(post.postTime).format('YYYY-MM-DD');
+							posts.push(post);
+							return callback();
+						});
+					});
+				}, function(err){
+					if(err){
+						return callback(err);
+					}
+					return callback(null, posts);
+				});
+			});
+		}
+	}, function(err, results){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		data.tag = results.tag;
+		data.posts = results.posts;
+		data.title = '标签：' + data.tag.name;
+		return res.render('center/postsOfTag', data);
+	});	
+});
+
 /**
  * 修改分类
  * @param  {object} req 请求对象
@@ -265,7 +394,7 @@ router.get('/categories', function(req, res){
 				if(err){
 					return callback(err);
 				}
-				category.postCounts = counts;
+				category.postCount = counts;
 				return callback();
 			});
 		}, function(err){
@@ -278,7 +407,84 @@ router.get('/categories', function(req, res){
 	});
 });
 
+/**
+ * 获取用户所有标签
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.get('/tags', function(req, res){
+	var data = req.data;
+		data.title = '所有标签';
+		data.sufJs = commonFn.js('tags.js');
+		data.current = 'tags';
+	TagModel.getTagsOfUser(data.user.id, function(err, tags){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(tags, function(tag, callback){
+			TagModel.getPostCountOfTag(tag.id, function(err, count){
+				if(err){
+					return callback(err);
+				}
+				tag.postCount = count;
+				return callback();
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.tags = tags;
+			res.render('center/tags', data);
+		});
+	});
+});
 
+/**
+ * 修改标签
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.post('/tag/:id', function(req, res){
+	var data = req.data;
+	req.body.id = parseInt(req.params.id);
+
+	fTagModify.run(data.user.id, req.body, function(err, tag){
+		console.log(tag);
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		var t = new TagModel(tag);
+		t.modify(function(err, result){
+			if(err){
+				return res.send({status:'fail', message:'发生错误！'+err.message});
+			}
+			return res.send({status:'success'});
+		});
+	});
+});
+
+/**
+ * 删除指定标签
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.delete('/tag/:id', function(req, res){
+	var data = req.data,
+	tagId = parseInt(req.params.id);
+
+	TagModel.delete(data.user.id, tagId, function(err, result){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		return res.send({status:'success'});
+	});
+});
+
+/**
+ * 获取用户所有文章
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
 function getPosts(req, res) {
 	var data = req.data;
 	data.title = data.user.nickname + "的个人中心";
@@ -307,7 +513,7 @@ function getPosts(req, res) {
 					TagModel.getTagsByPostId(post.id, callback);
 				},
 				category : function(callback){
-					CategoryModel.getById(post.id, callback);
+					CategoryModel.getById(post.categoryId, callback);
 				}
 			}, function(err, results){
 				if(err){
@@ -319,7 +525,7 @@ function getPosts(req, res) {
 			});
 		}, function(err){
 			if(err){
-				// 发生错误	??
+				return res.send('发生错误！'+err.message);
 			}
 			data.urlFn = commonFn.url;
 			data.posts = posts;

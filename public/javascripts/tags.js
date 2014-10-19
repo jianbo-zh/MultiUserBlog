@@ -1,13 +1,3 @@
-$("#tag-add").ajaxForm({
-	dataType : 'json',
-	success : function(res){
-		if(res.status === 'success'){
-			location.reload();
-		}else{
-			alert(res.message);
-		}
-	}
-});
 
 $("#tag-list").find('.edit').click(function(){
 	var cEdit = $(this),
@@ -25,13 +15,15 @@ $("#tag-list").find('.edit').click(function(){
 	var catInput = categoryItem.children('input');
 	catInput.select().blur(function(){
 		var that = $(this);
-		if(that.attr('oldValue') === trim(that.val())){
+		if(that.attr('oldValue') === $.trim(that.val())){
+			that.replaceWith('<a href="/center/tag/' + tid + '">'+that.attr('oldValue')+'</a>');
+			cEdit.removeAttr('editing');
 			return;
 		}
 		$.ajax({
 			type : 'post',
 			dataType : 'json',
-			data : {tagName:that.val()},
+			data : {name:that.val()},
 			url : '/center/tag/' + tid,
 			success : function(res){
 				if(res.status === 'success'){

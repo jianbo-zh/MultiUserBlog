@@ -1,0 +1,42 @@
+<%- include ../header %>
+		<div class="container">
+	<%- include _search %>
+	<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<h2>博客标签</h2>
+				</div>
+				<ul class="tag-list clearfix" id="tag-list">
+					<% 
+						if(typeof tags !== 'undefined'){ 
+							tags.forEach(function(tag){
+
+					%>
+					<li>
+						<div class="tag-action">
+							<a href="javascript:void(0);" tid="<%= tag.id %>" class="edit">编辑</a>
+							<a href="javascript:void(0);" tid="<%= tag.id %>" class="delete">删除</a>
+						</div>
+						<a href="/center/tag/<%= tag.id %>"><%= tag.name %></a>&nbsp;&nbsp;<span class="counts">x<%= tag.postCount %></span>
+					</li>
+					<% 
+							}); 
+						}%>
+				</ul>
+				<div class="paginate-container">
+					<div class="pagination">
+					<span class="previous_page disabled">Previous</span> 
+					<em class="current">1</em> 
+					<a rel="next" href="">2</a> 
+					<a href="">3</a> 
+					<a href="">4</a> 
+					<a href="">5</a> 
+					<span class="gap">…</span> 
+					<a href="">99</a> 
+					<a href="">100</a> 
+					<a class="next_page" rel="next" href="">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+<%- include ../footer %>

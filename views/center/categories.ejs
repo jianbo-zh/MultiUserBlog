@@ -16,7 +16,7 @@
 							<a href="javascript:void(0);" cid="<%= category.id %>" class="edit">编辑</a>
 							<a href="javascript:void(0);" cid="<%= category.id %>" class="delete">删除</a>
 						</div>
-						<a href=""><%= category.name %></a>&nbsp;&nbsp;<span class="counts">x<%= category.postCounts %></span>
+						<a href="/center/category/<%= category.id %>"><%= category.name %></a>&nbsp;&nbsp;<span class="counts">x<%= category.postCount %></span>
 					</li>
 					<% }); %>
 				</ul>

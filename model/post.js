@@ -115,6 +115,27 @@ Post.getPostById = function(postId, cb){
 	});
 }
 
+Post.getPostsByCategory = function(categoryId, cb){
+	db.getRead(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('post', function(err, collectionPost){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+			collectionPost.find({categoryId:categoryId}).toArray(function(err, posts){
+				db.close();
+				if(err){
+					return cb(err);
+				}
+				return cb(null, posts);
+			});
+		});
+	});
+}
+
 /**
  * 新建一个文章
  * @param {Function} cb 回调函数
