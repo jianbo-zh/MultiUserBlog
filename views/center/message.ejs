@@ -1,0 +1,37 @@
+<%- include ../header %>
+<div class="container">
+	<%- include _search %>
+	<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<h2><%= title %></h2>
+				</div>
+				<div class="main-content clearfix">
+					<% if(message.type == 0){ %>
+					<form action="/center/message/<%= message.id %>" class="send-message-form" id="message-reply-form" method="post">
+						<input type="hidden" name="subject" value="回复：<%= message.subject %>" />
+						<input type="hidden" name="subjectId" value="<%= message.subjectId %>" />
+						<input type="hidden" name="receiverId" value="<%= message.relId %>" />
+					<% } %>
+
+						<div class="form-row">
+							<p>主题：<%= message.subject %> [<%= message.sendDate %>]</p>
+						</div>
+						<div class="form-row">
+							<%- message.content %>
+						</div>
+
+					<% if(message.type == 0){ %>
+						<div class="form-row">
+							<p>回复内容：</p>
+							<textarea name="content" style="width:100%" rows="10"></textarea>
+						</div>
+						<div class="form-row">
+							<input type="submit" value="发送">
+						</div>
+					</form>
+					<% } %>
+				</div>
+			</div>
+		</div>
+<%- include ../footer %>

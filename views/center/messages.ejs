@@ -1,0 +1,67 @@
+<%- include ../header %>
+<div class="container">
+	<%- include _search %>
+	<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<div class="filter">
+						<a href="/center/messages"><span>全部</span></a>
+						<a href="/center/messages?type=0"><span>接受</span></a>
+						<a href="/center/messages?type=1"><span>发送</span></a>
+					</div>
+					<div class="search">
+						<form action="/message/search">
+							<span>搜索：</span>
+							<input type="text" name="key" />
+							<input type="submit" value="搜索" />
+						</form>
+					</div>
+					<h2>我的私信 <a href="/center/message" class="add-post">写信</a></h2>
+				</div>
+				<ul class="message-list clearfix">
+					<% messages.forEach(function(message){
+						if(message.type == 1){ // 发送
+					%>
+					<li>
+						<div class="message-action">
+							<a href="/center/message/<%= message.id %>">阅读</a>
+						</div>
+						<a href=""><img class="author-picture" src="/images/picture.jpg" alt=""></a>
+						To:<a href=""><%= message.relUser.nickname %></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><%= message.sendDate %></span>
+						<p><%= message.subject %></p>
+					</li>
+					<%
+					}else if(message.type == 0){ // 接收
+					%>
+					<li>
+						<div class="message-action">
+							<a href="/center/message/<%= message.id %>">阅读</a>
+						</div>
+						<a href=""><img class="author-picture" src="/images/picture.jpg" alt=""></a>
+						From:<a href=""><%= message.relUser.nickname %></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><%= message.sendDate %></span>
+						<p><%= message.subject %></p>
+					</li>
+					<%
+						} 
+					}); 
+					%>
+					
+					
+				</ul>
+				<div class="paginate-container">
+					<div class="pagination">
+					<span class="previous_page disabled">Previous</span> 
+					<em class="current">1</em> 
+					<a rel="next" href="">2</a> 
+					<a href="">3</a> 
+					<a href="">4</a> 
+					<a href="">5</a> 
+					<span class="gap">…</span> 
+					<a href="">99</a> 
+					<a href="">100</a> 
+					<a class="next_page" rel="next" href="">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+<%- include ../footer %>

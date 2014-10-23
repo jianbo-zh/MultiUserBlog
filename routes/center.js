@@ -10,10 +10,14 @@ var fPostModify = require('../filter/postModify.js');
 var fCategoryAdd = require('../filter/categoryAdd.js');
 var fCategoryModify = require('../filter/categoryModify.js');
 var fTagModify = require('../filter/tagModify.js');
+var fMessageAdd = require('../filter/messageAdd.js');
+var fMessageReply = require('../filter/messageReply.js');
 
+var UserModel = require('../model/user.js');
 var PostModel = require('../model/post.js');
 var TagModel = require('../model/tag.js');
 var CategoryModel = require('../model/category.js');
+var MessageModel = require('../model/message.js');
 
 /**
  * 公共方法，检查是否登录，及获取公共数据
@@ -477,6 +481,133 @@ router.delete('/tag/:id', function(req, res){
 			return res.send({status:'fail', message:'发生错误！'+err.message});
 		}
 		return res.send({status:'success'});
+	});
+});
+
+/**
+ * 发送私信表单
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.get('/message', function(req, res){
+	var data = req.data;
+	data.title = '发送私信';
+	data.current = 'messages';
+	data.preCss = data.preCss + "\n" + commonFn.css(['kindeditor.css']);
+	data.preJs = data.preJs + "\n" + commonFn.js(['jquery.form.js', 'kindeditor.js', 'kindeditor_zh.js']);
+	data.sufJs = commonFn.editor("content") + "\n" + commonFn.js(['messageAdd.js']);
+
+	return res.render('center/messageAdd', data);
+});
+
+/**
+ * 发送私信
+ * @param  {object} req 
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.post('/message', function(req, res){
+	var data = req.data;
+
+	fMessageAdd.run(data.user.id, req.body, function(err, message){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		var m = new MessageModel(message);
+		m.add(function(err, messageId){
+			if(err){
+				return res.send({status:'fail', message:'发生错误！'+err.message});
+			}
+			return res.send({status:'success'});
+		});
+	});
+});
+
+/**
+ * 获取消息列表
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.get('/messages', function(req, res){
+	var data = req.data;
+	data.title = '私信列表';
+	data.current = 'messages';
+	var type = (req.query.type===undefined) ? null : (parseInt(req.query.type) ? 1 : 0);
+
+	MessageModel.getMessageOfUser(data.user.id, type, function(err, messages){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(messages, function(message, callback){
+			UserModel.getUserById(message.relId, function(err, user){
+				if(err){
+					return callback(err);
+				}
+				message.relUser = user;
+				message.sendDate = moment(message.time).format('YYYY-MM-DD');
+				return callback();
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.messages = messages
+			return res.render('center/messages', data);
+		});
+	});
+});
+
+router.get('/message/:id', function(req, res){
+	var data = req.data;
+	data.current = 'messages';
+	messageId = parseInt(req.params.id);
+	if(!messageId){
+		return res.send('消息编号不能为空！');
+	}
+
+	MessageModel.getMessageById(data.user.id, messageId, function(err, message){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		if(message.type == 0){	// 接收的消息，需要回复
+			data.preCss = data.preCss + "\n" + commonFn.css(['kindeditor.css']);
+			data.preJs = data.preJs + "\n" + commonFn.js(['jquery.form.js', 'kindeditor.js', 'kindeditor_zh.js']);
+			data.sufJs = commonFn.editor("content") + "\n" + commonFn.js(['messageReply.js']);
+		}
+
+		UserModel.getUserById(message.relId, function(err, user){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			message.relUser = user;
+			message.sendDate = moment(message.time).format('YYYY-MM-DD');
+			data.message = message;
+			if(message.type == 1){
+				data.title = '我发送给'+user.nickname+'的消息';
+			}else{
+				data.title = user.nickname + '发送给我的消息';
+			}
+			return res.render('center/message', data);
+		});
+	});
+});
+
+router.post('/message/:id', function(req, res){
+	var data = req.data,
+		messageId = parseInt(req.params.id);
+		req.body.messageId = messageId;
+
+		fMessageReply.run(data.user.id, req.body, function(err, message){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		var m = new MessageModel(message);
+		m.add(function(err, messageId){
+			if(err){
+				return res.send({status:'fail', message:'发生错误！'+err.message});
+			}
+			return res.send({status:'success'});
+		});
 	});
 });
 

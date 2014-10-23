@@ -1,0 +1,30 @@
+<%- include ../header %>
+<div class="container">
+	<%- include _search %>
+	<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<h2><%= title %></h2>
+				</div>
+				<div class="main-content clearfix">
+					<form action="/center/message" class="send-message-form" id="send-message-form" method="post">
+						<div class="form-row">
+							<p>发送给：</p>
+							<input type="text" name="receiver">
+						</div>
+						<div class="form-row">
+							<p>消息主题：</p>
+							<input type="text" name="subject">
+						</div>
+						<div class="form-row">
+							<p>消息内容：</p>
+							<textarea name="content" style="width:100%" rows="10"></textarea>
+						</div>
+						<div class="form-row">
+							<input type="submit" value="发送">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+<%- include ../footer %>

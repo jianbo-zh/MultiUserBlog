@@ -89,4 +89,32 @@ User.getByEmail = function(email, cb){
 	});
 }
 
+/**
+ * 通过用户编号获取用户
+ * @param  {int}   userId 用户编号
+ * @param  {Function} cb     回调函数
+ */
+User.getUserById = function(userId, cb){
+	db.getRead(function(err, db){
+		if(err){
+			return cb(err);
+		}
+		db.collection('user', function(err, collectionUser){
+			if(err){
+				db.close();
+				return cb(err);
+			}
+
+			var user = {id:userId};
+			collectionUser.findOne(user, function(err, item){
+				db.close();
+				if(err){
+					return cb(err);
+				}
+				return cb(null, item);
+			});
+		});
+	});
+}
+
 module.exports = User;
