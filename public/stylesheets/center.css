@@ -227,6 +227,16 @@ a {
 #wrapper .container .main .like-list li .like-action {
 	float:right;
 }
+#wrapper .container .main .share-list > li {
+	margin-bottom:20px;
+}
+#wrapper .container .main .share-list li a img.author-picture {
+	float:left;
+	margin-right:10px;
+}
+#wrapper .container .main .share-list li .share-action {
+	float:right;
+}
 #wrapper .container .main .message-list > li {
 	margin-bottom:20px;
 }

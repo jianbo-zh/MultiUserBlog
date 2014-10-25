@@ -1,0 +1,55 @@
+<%- include ../header %>
+<div class="container">
+	<%- include _search %>
+	<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<div class="filter">
+						<a href="/center/my-likes"><span>我赞的</span></a>
+						<a href="/center/likes-to-me"><span>赞我的</span></a>
+					</div>
+					<div class="search">
+						<form action="/like/search">
+							<span>搜索：</span>
+							<input type="text" name="key" />
+							<input type="submit" value="搜索" />
+						</form>
+					</div>
+					<h2><% if(likeType=='myLikes'){ %>我赞过的文章<% }else{ %>我被赞过的文章<% } %></h2>
+				</div>
+				<ul class="like-list clearfix">
+					<% likes.forEach(function(like){ %>
+					<li>
+						<!-- <div class="like-action">
+							<a href="javascript:void(0);" like-id="" class="remove-my-like">删除记录</a>
+						</div> -->
+						<a href="/<%= like.user.id %>"><img class="author-picture" src="/images/picture.jpg" alt=""></a>
+						<a href="/<%= like.user.id %>"><%= like.user.nickname %>：</a>
+						<a href="/<%= like.user.id %>/post/<%= like.postId %>">
+							<% if(likeType=='myLikes'){ %>
+							<%= like.title %>
+							<% }else{ %>
+							<%= like.post.title %>
+							<% } %>
+						</a>
+						<span>[ <%= like.likeDate %> ]</span>
+					</li>
+					<% }); %>
+				</ul>
+				<div class="paginate-container">
+					<div class="pagination">
+					<span class="previous_page disabled">Previous</span> 
+					<em class="current">1</em> 
+					<a rel="next" href="">2</a> 
+					<a href="">3</a> 
+					<a href="">4</a> 
+					<a href="">5</a> 
+					<span class="gap">…</span> 
+					<a href="">99</a> 
+					<a href="">100</a> 
+					<a class="next_page" rel="next" href="">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+<%- include ../footer %>

@@ -12,12 +12,18 @@ var fCategoryModify = require('../filter/categoryModify.js');
 var fTagModify = require('../filter/tagModify.js');
 var fMessageAdd = require('../filter/messageAdd.js');
 var fMessageReply = require('../filter/messageReply.js');
+var fCommentAdd = require('../filter/commentAdd.js');
 
 var UserModel = require('../model/user.js');
 var PostModel = require('../model/post.js');
 var TagModel = require('../model/tag.js');
 var CategoryModel = require('../model/category.js');
 var MessageModel = require('../model/message.js');
+var CollectModel = require('../model/collect.js');
+var FollowModel = require('../model/follow.js');
+var LikeModel = require('../model/like.js');
+var ShareModel = require('../model/share.js');
+var CommentModel = require('../model/comment.js');
 
 /**
  * 公共方法，检查是否登录，及获取公共数据
@@ -603,6 +609,575 @@ router.post('/message/:id', function(req, res){
 		}
 		var m = new MessageModel(message);
 		m.add(function(err, messageId){
+			if(err){
+				return res.send({status:'fail', message:'发生错误！'+err.message});
+			}
+			return res.send({status:'success'});
+		});
+	});
+});
+
+/**
+ * 用户收藏
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.get('/collects', function(req, res){
+	var data = req.data;
+	data.title = '收藏的文章';
+	data.current = 'collects';
+	data.sufJs = commonFn.js(['collects.js']);
+
+	CollectModel.getsOfUser(data.user.id, 0, 1000, function(err, collects){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(collects, function(collect, callback){
+			UserModel.getUserById(collect.authorId, function(err, author){
+				if(err){
+					return callback(err);
+				}
+				collect.author = author || null;
+				collect.date = moment(collect.time).format('YYYY-MM-DD');
+				return callback();
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.collects = collects;
+			res.render('center/collects', data);
+		});
+	});
+});
+
+/**
+ * 删除用户收藏
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.delete('/collect/:id', function(req, res){
+	var data = req.data;
+	collectId = parseInt(req.params.id);
+	CollectModel.delete(data.user.id, collectId, function(err, result){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		return res.send({status:'success'});
+	});
+});
+
+/**
+ * 获取关注我的列表
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.get('/followers', function(req, res){
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
+	data.title = "关注我的人";
+	data.current = 'follows';
+	data.sufJs = commonFn.js(['follows.js']);
+
+	FollowModel.getFollowers(data.user.id, offset, limit, function(err, followers){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(followers, function(follower, callback){
+			UserModel.getUserById(follower.userId, function(err, user){
+				if(err){
+					return callback(err);
+				}
+				follower.user = user;
+				FollowModel.hasFollowed(data.user.id, user.id, function(err, result){
+					if(err){
+						return callback(err);
+					}
+					follower.hasFollowed = result ? true : false;
+					return callback();
+				});
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.follows = followers;			
+			data.followType = 'follower';
+			return res.render('center/follows', data);
+		});
+	});
+});
+
+/**
+ * 获取我关注的列表
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.get('/followings', function(req, res){
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
+	data.title = "我关注的人";
+	data.current = 'follows';
+	data.sufJs = commonFn.js(['follows.js']);
+
+	FollowModel.getFollowings(data.user.id, offset, limit, function(err, followings){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(followings, function(following, callback){
+			UserModel.getUserById(following.followingId, function(err, user){
+				if(err){
+					return callback(err);
+				}
+				following.user = user;
+				following.hasFollowed = true;
+				return callback();
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.follows = followings;
+			data.followType = 'following';
+			return res.render('center/follows', data);
+		});
+	});
+});
+
+/**
+ * 取消关注
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.delete('/following/:id', function(req, res){
+	var data = req.data;
+	followingId = parseInt(req.params.id);
+	FollowModel.cancelFollowing(data.user.id, followingId, function(err, result){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		return res.send({status:'success'});
+	});
+});
+
+/**
+ * 关注用户
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.post('/following/:id', function(req, res){
+	var data = req.data;
+	followingId = parseInt(req.params.id);
+	var f = {
+		userId:data.user.id,
+		followingId:followingId
+	};
+	var follow = new FollowModel({userId:data.user.id, followingId:followingId });
+	follow.followingUser(function(err, result){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		return res.send({status:'success'});
+	});
+});
+
+
+router.get('/my-likes', function(req, res){
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
+	data.title = '我赞的文章';
+	data.current = 'likes';
+
+	LikeModel.getMyLikes(data.user.id, offset, limit, function(err, likes){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(likes, function(like, callback){
+			UserModel.getUserById(like.authorId, function(err, user){
+				if(err){
+					return callback(err);
+				}
+				like.user = user;
+				like.likeDate = moment(like.likeTime).format('YYYY-MM-DD');
+				return callback();
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.likes = likes;
+			data.likeType = 'myLikes';
+			return res.render('center/likes', data);
+		});
+	});
+});
+
+router.get('/likes-to-me', function(req, res){
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
+	data.title = '赞我的文章';
+	data.current = 'likes';
+
+	LikeModel.getLikesToMe(data.user.id, offset, limit, function(err, likes){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(likes, function(like, callback){
+			UserModel.getUserById(like.userId, function(err, user){
+				if(err){
+					return callback(err);
+				}
+				like.user = user;
+				like.likeDate = moment(like.likeTime).format('YYYY-MM-DD');
+				PostModel.getPostById(like.postId, function(err, post){
+					if(err){
+						return callback(err);
+					}
+					like.post = post;
+					return callback();
+				});
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.likes = likes;
+			data.likeType = 'likesToMe';
+			return res.render('center/likes', data);
+		});
+	});
+});
+
+router.get('/my-shares', function(req, res){
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
+	data.title = '我分享过的文章';
+	data.current = 'shares';
+	data.sufJs = commonFn.js('shares.js');
+
+	ShareModel.getMyShares(data.user.id, offset, limit, function(err, shares){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(shares, function(share, callback){
+			UserModel.getUserById(share.receiverId, function(err, user){
+				if(err){
+					return callback(err);
+				}
+				share.user = user;
+				share.shareDate = moment(share.shareTime).format('YYYY-MM-DD');
+				return callback();
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.shares = shares;
+			data.shareType = 'myShares';
+			return res.render('center/shares', data);
+		});
+	});
+});
+
+router.get('/shares-to-me', function(req, res){
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
+	data.title = '分享给我的文章';
+	data.current = 'shares';
+	data.sufJs = commonFn.js('shares.js');
+
+	ShareModel.getSharesToMe(data.user.id, offset, limit, function(err, shares){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(shares, function(share, callback){
+			UserModel.getUserById(share.userId, function(err, user){
+				if(err){
+					return callback(err);
+				}
+				share.user = user;
+				share.shareDate = moment(share.shareTime).format('YYYY-MM-DD');
+				return callback();
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.shares = shares;
+			data.shareType = 'sharesToMe';
+			return res.render('center/shares', data);
+		});
+	});
+});
+
+router.delete('/share/:id', function(req, res){
+	var data = req.data,
+		shareId = parseInt(req.params.id),
+		shareType = req.body.shareType;
+
+	ShareModel.delete(data.user.id, shareId, shareType, function(err, result){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		return res.send({status:'success'});
+	});
+});
+
+router.get('/my-comments', function(req, res){
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
+	data.title = '我的评论';
+	data.current = 'comments';
+
+	CommentModel.getMyComments(data.user.id, offset, limit, function(err, comments){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(comments, function(comment, callback){
+			comment.commentDate = moment(comment.commentTime).format('YYYY-MM-DD');
+			UserModel.getUserById(comment.authorId, function(err, user){
+				if(err){
+					return callback(err);
+				}
+				comment.author = user;
+				return callback();
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.comments = comments;
+			data.commentType = 'myComments';
+			return res.render('center/comments', data);
+		});
+	});
+});
+
+
+router.get('/comments-to-me', function(req, res){
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
+	data.title = '评论我的';
+	data.current = 'comments';
+
+	CommentModel.getCommentsToMe(data.user.id, offset, limit, function(err, comments){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		async.each(comments, function(comment, callback){
+			comment.commentDate = moment(comment.commentTime).format('YYYY-MM-DD');
+			UserModel.getUserById(comment.userId, function(err, user){
+				if(err){
+					return callback(err);
+				}
+				comment.user = user;
+				PostModel.getPostById(comment.postId, function(err, post){
+					if(err){
+						return callback(err);
+					}
+					comment.post = post;
+					return callback();
+				});
+			});
+		}, function(err){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			data.comments = comments;
+			data.commentType = 'commentsToMe';
+			return res.render('center/comments', data);
+		});
+	});
+});
+
+/**
+ * 我的单条评论
+ * @param  {[type]} req [description]
+ * @param  {[type]} res [description]
+ * @return {[type]}     [description]
+ */
+router.get('/my-comment/:id', function(req, res){
+	var data = req.data,
+		commentId = parseInt(req.params.id);
+	data.title = '我的评论';
+	data.current = 'comments';
+	data.preCss = data.preCss + "\n" + commonFn.css(['kindeditor.css']);
+	data.preJs = data.preJs + "\n" + commonFn.js(['jquery.form.js', 'kindeditor.js', 'kindeditor_zh.js']);
+	data.sufJs = commonFn.editor("content") + "\n" + commonFn.js(['comment.js']);
+
+	CommentModel.getCommentById(commentId, function(err, comment){
+		if(err){
+			console.log(1014);
+			return res.send('发生错误！'+err.message);
+		}
+		UserModel.getUserById(comment.authorId, function(err, user){
+			if(err){
+				console.log(1019);
+				return res.send('发生错误！'+err.message);
+			}
+			comment.user = data.user;
+			comment.author = user;
+			comment.commentDate = moment(comment.commentTime).format('YYYY-MM-DD');
+			// 我的评论
+			data.myComment = comment;
+
+			// 获取评论主题
+			var subjectId = comment.parent || comment.id;
+			async.parallel({
+				subjectComment : function(callback){
+					if(subjectId == comment.id){	// 当前评论就是主题评论
+						return callback(null, comment);
+					}else{
+						CommentModel.getCommentById(subjectId, function(err, stct){
+							if(err){
+								return callback(err);
+							}
+							stct.commentDate = moment(stct.commentTime).format('YYYY-MM-DD');
+							async.parallel({
+								user : function(callback){
+									return UserModel.getUserById(stct.userId, callback);
+								},
+								author : function(callback){
+									return UserModel.getUserById(stct.authorId, callback);
+								}
+							}, function(err, results){
+								if(err){
+									return callback(err);
+								}
+								stct.user = results.user;
+								stct.author = results.author;
+								return callback(null, stct);
+							});
+						});
+					}
+				}
+			}, function(err, results){
+				if(err){
+				console.log(1061);
+					return res.send('发生错误！'+err.message);
+				}
+				var offset = 0, limit = 1000;
+				data.subjectComment = results.subjectComment;
+				// 获取子评论
+				CommentModel.getSubCommentsOfParent(subjectId, offset, limit, function(err, comments){
+					if(err){
+
+			console.log(1070);
+						return res.send('发生错误！'+err.message);
+					}
+					async.each(comments, function(comment, callback){
+						comment.commentDate = moment(comment.commentTime).format('YYYY-MM-DD');
+						UserModel.getUserById(comment.userId, function(err, user){
+							if(err){
+								return callback(err);
+							}
+							comment.user = user;
+							return callback();
+						});
+					}, function(err){
+						if(err){
+
+			console.log(1085);
+							return res.send('发生错误！'+err.message);
+						}
+						data.subComments = comments;
+						data.commentType = 'myComment';
+						return res.render('center/comment', data);
+					});
+				});
+			});
+		});
+	});
+});
+
+router.get('/comment-to-me/:id', function(req, res){
+	var data = req.data,
+		commentId = parseInt(req.params.id);
+	data.title = '评论我的';
+	data.current = 'comments';
+	data.preCss = data.preCss + "\n" + commonFn.css(['kindeditor.css']);
+	data.preJs = data.preJs + "\n" + commonFn.js(['jquery.form.js', 'kindeditor.js', 'kindeditor_zh.js']);
+	data.sufJs = commonFn.editor("content") + "\n" + commonFn.js(['comment.js']);
+
+	CommentModel.getCommentById(commentId, function(err, comment){
+		if(err){
+			return res.send('发生错误！'+err.message);
+		}
+		var subjectId = comment.parent || comment.id;
+		async.parallel({
+			subjectComment : function(callback){
+				if(subjectId == comment.id){	// 当前评论就是主题评论
+					return callback(null, comment);
+				}else{
+					CommentModel.getCommentById(subjectId, callback);
+				}
+			}
+		}, function(err, results){
+			if(err){
+				return res.send('发生错误！'+err.message);
+			}
+			var stct = results.subjectComment;
+			async.parallel({
+				user : function(callback){
+					return UserModel.getUserById(stct.userId, callback);
+				},
+				author : function(callback){
+					return UserModel.getUserById(stct.authorId, callback);
+				}
+			}, function(err, results){
+				if(err){
+					return callback(err);
+				}
+				stct.user = results.user;
+				stct.author = results.author;
+				stct.commentDate = moment(stct.commentTime).format('YYYY-MM-DD');
+				data.subjectComment = stct;
+				var offset = 0, limit = 1000;
+				// 获取子评论
+				CommentModel.getSubCommentsOfParent(subjectId, offset, limit, function(err, comments){
+					if(err){
+						return res.send('发生错误！'+err.message);
+					}
+					async.each(comments, function(comment, callback){
+						comment.commentDate = moment(comment.commentTime).format('YYYY-MM-DD');
+						UserModel.getUserById(comment.userId, function(err, user){
+							if(err){
+								return callback(err);
+							}
+							comment.user = user;
+							return callback();
+						});
+					}, function(err){
+						if(err){
+							return res.send('发生错误！'+err.message);
+						}
+						data.subComments = comments;
+						data.commentType = 'commentToMe';
+						return res.render('center/comment', data);
+					});
+				});
+			});
+		});
+	});
+});
+
+router.post('/comment', function(req, res){
+	var data = req.data;
+	fCommentAdd.run(data.user.id, req.body, function(err, comment){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		var comment = new CommentModel(data.user.id, comment);
+
+		comment.add(function(err, commentId){
 			if(err){
 				return res.send({status:'fail', message:'发生错误！'+err.message});
 			}

@@ -1,0 +1,46 @@
+<%- include ../header %>
+<div class="container">
+	<%- include _search %>
+	<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<div class="search">
+						<form action="/collect/search">
+							<span>搜索：</span>
+							<input type="text" name="key" />
+							<input type="submit" value="搜索" />
+						</form>
+					</div>
+					<h2>我的收藏</h2>
+				</div>
+				<ul class="collect-list clearfix">
+					<% collects.forEach(function(collect){ %> 
+					<li>
+						<div class="collect-action">
+							<a href="/<%= collect.author.id %>/post/<%= collect.postId %>" target="_blank">查看</a>
+							<a href="javascript:void(0);" collect-id="<%= collect.id %>" class="remove-collect">移除</a>
+						</div>
+						<a href=""><img class="author-picture" src="/images/picture.jpg" alt=""></a>
+						<a href="/<%= collect.author.id %>"><%= collect.author.nickname %>：</a>
+						<a href="/<%= collect.author.id %>/post/<%= collect.postId %>"><%= collect.title %></a>
+						<p><span>收藏时间：<%= collect.date %></span></P>
+					</li>
+					<% }); %>
+				</ul>
+				<div class="paginate-container">
+					<div class="pagination">
+					<span class="previous_page disabled">Previous</span> 
+					<em class="current">1</em> 
+					<a rel="next" href="">2</a> 
+					<a href="">3</a> 
+					<a href="">4</a> 
+					<a href="">5</a> 
+					<span class="gap">…</span> 
+					<a href="">99</a> 
+					<a href="">100</a> 
+					<a class="next_page" rel="next" href="">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+<%- include ../footer %>

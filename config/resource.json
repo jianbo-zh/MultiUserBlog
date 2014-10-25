@@ -12,17 +12,17 @@
 		"postAdd.js" : "/javascripts/postAdd.js",
 		"postModify.js" : "/javascripts/postModify.js",
 		"tags.js" : "/javascripts/tags.js",
+		"collects.js" : "/javascripts/collects.js",
+		"follows.js" : "/javascripts/follows.js",
+		"shares.js" : "/javascripts/shares.js",
+		"comment.js" : "/javascripts/comment.js",
 		
 		"category.js" : "/javascripts/category.js",
 		"posts.js" : "/javascripts/posts.js",
 		"post.js" : "/javascripts/post.js",
 		"messageAdd.js" : "/javascripts/messageAdd.js",
 		"messageReply.js" : "/javascripts/messageReply.js",
-		"collect.js" : "/javascripts/collect.js",
-		"follow.js" : "/javascripts/follow.js",
-		"share.js" : "/javascripts/share.js",
-		"like.js" : "/javascripts/like.js",
-		"commentDetail.js" : "/javascripts/commentDetail.js"
+		"likes.js" : "/javascripts/likes.js"
 	},
 	"css" : {
 

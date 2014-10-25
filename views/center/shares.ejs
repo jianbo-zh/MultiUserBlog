@@ -1,0 +1,50 @@
+<%- include ../header %>
+<div class="container">
+	<%- include _search %>
+	<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<div class="filter">
+						<a href="/center/my-shares"><span>我分享的</span></a>
+						<a href="/center/shares-to-me"><span>分享我的</span></a>
+					</div>
+					<div class="search">
+						<form action="/share/search">
+							<span>搜索：</span>
+							<input type="text" name="key" />
+							<input type="submit" value="搜索" />
+						</form>
+					</div>
+					<h2><% if(shareType=='myShares'){ %>我分享的文章<% }else{ %>分享给我的文章<% } %></h2>
+				</div>
+				<ul class="share-list clearfix">
+					<% shares.forEach(function(share){ %>
+					<li>
+						<div class="share-action">
+							<a href="javascript:void(0);" share-id="<%= share.id %>" class="<% if(shareType=='myShares'){ %>remove-my-share<% }else{ %>remove-share-to-me<% } %>">删除记录</a>
+						</div>
+						<a href="/<%= share.user.id %>"><img class="author-picture" src="/images/picture.jpg" alt=""></a>
+						<a href="/<%= share.user.id %>"><%= share.user.nickname %></a>
+						分享：
+						<a href="/<%= share.authorId %>/post/<%= share.postId %>"><%= share.title %></a>
+						<span>[ <%= share.shareDate %> ]</span>
+					</li>
+					<% }); %>
+				</ul>
+				<div class="paginate-container">
+					<div class="pagination">
+					<span class="previous_page disabled">Previous</span> 
+					<em class="current">1</em> 
+					<a rel="next" href="">2</a> 
+					<a href="">3</a> 
+					<a href="">4</a> 
+					<a href="">5</a> 
+					<span class="gap">…</span> 
+					<a href="">99</a> 
+					<a href="">100</a> 
+					<a class="next_page" rel="next" href="">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+<%- include ../footer %>

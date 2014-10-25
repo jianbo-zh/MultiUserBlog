@@ -1,10 +1,9 @@
 $('.cancel-following').click(function(e){
-	var followId = $(this).attr('follow-id');
+	var followId = $(this).attr('user-id');
 	$.ajax({
-		url : '/center/follow',
+		url : '/center/following/'+followId,
 		dataType : 'json',
 		type : 'post',
-		data : 'followId='+followId,
 		beforeSend : function(xhr){
 					return xhr.setRequestHeader('X-HTTP-Method-Override', 'DELETE');
 		},
@@ -23,8 +22,7 @@ $('.cancel-following').click(function(e){
 $('.to-following').click(function(e){
 	var userId = $(this).attr('user-id');
 	$.ajax({
-		url : '/center/follow',
-		data : 'userId='+userId,
+		url : '/center/following/'+userId,
 		dataType : 'json',
 		type : 'post',
 		success : function(res){
@@ -44,8 +42,7 @@ $('.to-following').click(function(e){
 $('#to-following').click(function(e){
 	var userId = $(this).attr('user-id');
 	$.ajax({
-		url : '/center/follow',
-		data : 'userId='+userId,
+		url : '/center/following/'+userId,
 		dataType : 'json',
 		type : 'post',
 		success : function(res){
