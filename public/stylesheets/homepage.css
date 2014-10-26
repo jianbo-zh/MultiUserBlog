@@ -147,6 +147,7 @@ a {
 }
 #wrapper .container .main .post-list > li {
 	margin-bottom:20px;
+	height: 41px;
 }
 #wrapper .container .main .post-list a img.author-picture {
 	float:left;
@@ -156,6 +157,9 @@ a {
 #wrapper .container .main .post-list .post-title {}
 #wrapper .container .main .post-list .post-title h3 {
 	margin-bottom:5px;
+}
+#wrapper .container .main .post-list .post-title p span.postDate {
+	float:right;
 }
 #wrapper .container .main .post-list ul.post-data {
 	float:right;

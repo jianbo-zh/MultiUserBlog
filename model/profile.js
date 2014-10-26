@@ -117,48 +117,4 @@ User.getUserById = function(userId, cb){
 	});
 }
 
-User.updateBasic = function(userId, userInfo, cb){
-	db.getRead(function(err, db){
-		if(err){
-			return cb(err);
-		}
-		db.collection('user', function(err, collectionUser){
-			if(err){
-				db.close();
-				return cb(err);
-			}
-			console.log(userId);
-			console.log(userInfo);
-			collectionUser.update({id:userId}, {$set:userInfo}, function(err, result){
-				db.close();
-				if(err){
-					return cb(err);
-				}
-				return cb(null, result);
-			});
-		});
-	});
-}
-
-User.updatePassword = function(userId, newPassword, cb){
-	db.getRead(function(err, db){
-		if(err){
-			return cb(err);
-		}
-		db.collection('user', function(err, collectionUser){
-			if(err){
-				db.close();
-				return cb(err);
-			}
-			collectionUser.update({id:userId}, {$set:{password:newPassword}}, function(err, result){
-				db.close();
-				if(err){
-					return cb(err);
-				}
-				return cb(null, result);
-			});
-		});
-	});
-}
-
 module.exports = User;

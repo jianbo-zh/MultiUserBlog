@@ -35,7 +35,7 @@ Tag.getTagById = function(tagId, cb){
 }
 
 
-Tag.getTagsOfUser = function(userId, cb){
+Tag.getTagsOfUser = function(userId, offset, limit, cb){
 	db.getRead(function(err, db){
 		if(err){
 			return cb(err);
@@ -45,7 +45,7 @@ Tag.getTagsOfUser = function(userId, cb){
 				db.close();
 				return cb(err);
 			}
-			collectionTag.find({userId:userId}).toArray(function(err, tags){
+			collectionTag.find({userId:userId}, {skip:offset, limit:limit}).toArray(function(err, tags){
 				db.close();
 				if(err){
 					return cb(err);
@@ -115,7 +115,7 @@ Tag.getTagsByPostId = function(postId, cb){
 	});
 }
 
-Tag.getRelByTagId = function(tagId, cb){
+Tag.getRelsByTagId = function(tagId, offset, limit, cb){
 	db.getRead(function(err, db){
 		if(err){
 			return cb(err);
@@ -125,7 +125,7 @@ Tag.getRelByTagId = function(tagId, cb){
 				db.close();
 				return cb(err);
 			}
-			collectionPRT.find({tagId:tagId}, {fields:{postId:1}}).toArray(function(err, docs){
+			collectionPRT.find({tagId:tagId}, {skip:offset, limit:limit, fields:{postId:1}}).toArray(function(err, docs){
 				db.close();
 				if(err){
 					return cb(err);

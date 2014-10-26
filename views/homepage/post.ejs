@@ -1,48 +1,7 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<title>标题</title>
-		<link rel="stylesheet" type="text/css" href="css/reset.css" />
-		<link rel="stylesheet" type="text/css" href="css/homepage.css" />
-	</head>
-	<body>
-		<div id="wrapper">
-			<div class="header">
-				<a class="logo" href="www.shangxiahui.com"><img src="image/logo.jpg" alt=""></a>
-				<div class="actions">
-					<a href="/center">
-						<img src="" alt="">
-						<span></span>
-					</a>
-					<a href="/center/profile"><span>设置</span></a>
-					<a href="/logout"><span>退出</span></a>
-				</div>
-			</div>
+<%- include ../header %>
 		<div class="container">
-			<div class="sidebar floatr">
-				<ul class="author-info">
-					<li class="clearfix"><a href=""><img class="author-picture" src="image/picture.jpg"></a> <a class="author-name" href="">Tipine</a></li>
-					<li>QQ: <span>466586808</span></li>
-					<li>Weibo: <span>Jianbo</span></li>
-					<li class="user-action"><a href="javascript:void(0)">关注他</a> <a href="javascript:void(0)">发私信</a></li>
-				</ul>
-				<ul class="post-action">
-					<li>文章数据</li>
-					<li>
-						<a href="javascript:void(0);" id="postCollect">收藏</a>
-						<span class="collect">x300</span>
-					</li>
-					<li>
-						<a href="javascript:void(0);" id="postLike">点赞</a>
-						<span class="like">x300</span>
-					</li>
-					<li>
-						<a href="javascript:void(0);" id="postShare">分享</a>
-						<span class="share">x300</span>
-					</li>
-				</ul>
-			</div>
+			<%- include _search %>
+			<%- include _sidebar %>
 			<div class="main marginl">
 				<div class="main-header">
 					<h2>标题</h2>
@@ -99,17 +58,4 @@
 		</div>
 		<div class="post-collect" id="post-collect-form"></div>
 		<div class="post-share" id="post-share-form"></div>
-			<div class="footer">
-				<ul class="footer-left">
-					<li><a href="">常用功能一</a></li>
-					<li><a href="">常用功能二</a></li>
-				</ul>
-				<a class="footer-logo" href="www.shangxiahui.com"><img src="image/logo.jpg" /></a>
-				<ul class="footer-right">
-					<li><a href="">常用功能三</a></li>
-					<li><a href="">常用功能四</a></li>
-				</ul>
-			</div>
-		</div>
-	</body>
-</html>
+<%- include ../footer %>

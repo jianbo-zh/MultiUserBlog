@@ -43,7 +43,7 @@ Post.getStatics = function(postId, cb){
 }
 
 Post.getPostsBySort = function(userId, sortBy, offset, limit, cb){
-	Post.getPostIdsBySort(userId, sortBy, 1, offset, limit, function(err, postStatics){
+	Post.getPostIdsBySort(userId, sortBy, -1, offset, limit, function(err, postStatics){
 		if(err){
 			return cb(err);
 		}
@@ -115,7 +115,7 @@ Post.getPostById = function(postId, cb){
 	});
 }
 
-Post.getPostsByCategory = function(categoryId, cb){
+Post.getPostsByCategory = function(categoryId, offset, limit, cb){
 	db.getRead(function(err, db){
 		if(err){
 			return cb(err);
@@ -125,7 +125,7 @@ Post.getPostsByCategory = function(categoryId, cb){
 				db.close();
 				return cb(err);
 			}
-			collectionPost.find({categoryId:categoryId}).toArray(function(err, posts){
+			collectionPost.find({categoryId:categoryId}, {skip:offset, limit:limit}).toArray(function(err, posts){
 				db.close();
 				if(err){
 					return cb(err);
@@ -180,7 +180,7 @@ Post.prototype.add = function(cb){
 							db.close();
 							return cb(err);
 						}
-						collectionPS.insert({userId:post.userId, postId:postId, reads:0, likes:0, collects:0, shares:0}, function(err, result){
+						collectionPS.insert({userId:post.userId, postId:postId, reads:0, likes:0, collects:0, shares:0, postTime:post.postTime}, function(err, result){
 							db.close();
 							if(err){
 								return cb(err);

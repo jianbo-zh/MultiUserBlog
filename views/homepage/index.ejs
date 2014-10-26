@@ -1,0 +1,62 @@
+<%- include ../header %>
+		<div class="container">
+			<%- include _search %>
+			<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<h2>最新文章</h2>
+					<div class="sort">
+						<span>排序：</span>
+						<select name="post-sort" id="">
+							<option value="1">更新时间</option>	
+							<option value="1">阅读次数</option>	
+							<option value="1">收藏次数</option>	
+							<option value="1">分享次数</option>	
+							<option value="1">点赞次数</option>	
+						</select>
+					</div>
+				</div>
+				<ul class="post-list clearfix">
+					<% posts.forEach(function(post){ %>
+					<li>
+						<a href="/u/<%= author.id %>"><img class="author-picture" src="/images/picture.jpg" alt=""></a>
+						<ul class="post-data">
+							<li class="reads">阅<span>x<%= post.statics.reads %></span></li>
+							<li class="likes">&nbsp;赞<span>x<%= post.statics.likes %></span></li>
+							<li class="collects">&nbsp;藏<span>x<%= post.statics.collects %></span></li>
+							<li class="shares">&nbsp;享<span>x<%= post.statics.shares %></span></li>
+						</ul>
+						<div class="post-title">
+							<h3><a href="/u/<%= author.id %>/post/<%= post.id %>"><%= post.title %></a> <span><%= post.postDate %></span></h3>
+							<p>
+								<% if(post.category){ %>
+								类别：<a href="/u/<%= author.id %>/category/<%= post.category.id %>"><%= post.category.name %></a>
+								<% } %>
+								<% if(post.tags.length>0){ %>
+								标签：
+									<% post.tags.forEach(function(tag){ %> 
+										<a href="/u/<%= author.id %>/tag/<%= tag.id %>"><%= tag.name %></a>
+									<% }); %>
+								<% } %>
+							</p>
+						</div>
+					</li>
+					<% }); %>
+				</ul>
+				<div class="paginate-container">
+					<div class="pagination">
+					<span class="previous_page disabled">Previous</span> 
+					<em class="current">1</em> 
+					<a rel="next" href="">2</a> 
+					<a href="">3</a> 
+					<a href="">4</a> 
+					<a href="">5</a> 
+					<span class="gap">…</span> 
+					<a href="">99</a> 
+					<a href="">100</a> 
+					<a class="next_page" rel="next" href="">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+<%- include ../footer %>

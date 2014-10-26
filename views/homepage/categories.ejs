@@ -1,0 +1,16 @@
+<%- include ../header %>
+		<div class="container">
+			<%- include _search %>
+			<%- include _sidebar %>
+			<div class="main">
+				<div class="main-header">
+					<h2>博客类别</h2>
+				</div>
+				<ul class="category-list clearfix">
+					<% postCategories.forEach(function(category){ %>
+					<li><a href="/u/<%= author.id %>/category/<%= category.id %>"><%= category.name %></a>&nbsp;&nbsp;<span class="counts">x<%= category.postCount %></span></li>
+					<% }); %>
+				</ul>
+			</div>
+		</div>
+<%- include ../footer %>

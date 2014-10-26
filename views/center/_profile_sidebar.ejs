@@ -1,0 +1,11 @@
+<div class="sidebar">
+	<ul class="profile">
+		<li class="clearfix">
+			<a href=""><img class="author-picture" src="/images/picture.jpg"></a>
+			<a class="author-name" href=""><%= user.nickname %></a>
+		</li>
+		<li class="<%= current==='basic' ? 'cur' : '' %>"><a href="/center/profile-basic">基本设置</a></li>
+		<li class="<%= current==='password' ? 'cur' : '' %>"><a href="/center/profile-password">修改密码</a></li>
+		<li class="<%= current==='picture' ? 'cur' : '' %>"><a href="/center/profile-picture">设置头像</a></li>
+	</ul>
+</div>

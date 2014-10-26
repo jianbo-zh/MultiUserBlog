@@ -1,0 +1,21 @@
+<div class="sidebar <% if(typeof isPostPage != 'undefined'){ %>floatr<% } %>">
+	<ul class="author-info">
+		<li class="clearfix"><a href="<%= author.id %>"><img class="author-picture" src="/images/picture.jpg"></a> <a class="author-name" href="">Tipine</a></li>
+		<li>QQ: <span><%= author.qq %></span></li>
+		<li>Weibo: <span><%= author.weibo %></span></li>
+		<li class="following"><a href="javascript:void(0)">关注他</a></li>
+		<li class="message"><a href="javascript:void(0)">发私信</a></li>
+	</ul>
+	<ul class="category">
+		<li><a class="more" href="/u/<%= author.id %>/categories">更多</a> 分类：</li>
+		<% categories.forEach(function(category){ %> 
+		<li><span>x<%= category.postCount %></span><a href="/u/<%= author.id %>/category/<%= category.id %>"><%= category.name %></a></li>
+		<% }); %>
+	</ul>
+	<ul class="tag">
+		<li><a class="more" href="/u/<%= author.id %>/tags">更多</a> 标签：</li>
+		<% tags.forEach(function(tag){ %> 
+		<li><span>x<%= tag.postCount %></span><a href="/u/<%= author.id %>/tag/<%= tag.id %>"><%= tag.name %></a></li>
+		<% }); %>
+	</ul>
+</div>

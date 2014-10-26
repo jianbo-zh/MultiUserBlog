@@ -16,6 +16,8 @@
 		"follows.js" : "/javascripts/follows.js",
 		"shares.js" : "/javascripts/shares.js",
 		"comment.js" : "/javascripts/comment.js",
+		"profileBasic.js" : "/javascripts/profileBasic.js",
+		"profilePassword.js" : "/javascripts/profilePassword.js",
 		
 		"category.js" : "/javascripts/category.js",
 		"posts.js" : "/javascripts/posts.js",

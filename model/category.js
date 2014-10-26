@@ -136,7 +136,7 @@ Category.getById = function(categoryId, cb){
 	});
 }
 
-Category.getCategoriesOfUser = function(userId, cb){
+Category.getCategoriesOfUser = function(userId, offset, limit, cb){
 	db.getRead(function(err, db){
 		if(err){
 			return cb(err);
@@ -146,7 +146,7 @@ Category.getCategoriesOfUser = function(userId, cb){
 				db.close();
 				return cb(err);
 			}
-			collectionCategory.find({userId:userId}).toArray(function(err, categories){
+			collectionCategory.find({userId:userId}, {skip:offset, limit:limit}).toArray(function(err, categories){
 				db.close();
 				if(err){
 					return cb(err);

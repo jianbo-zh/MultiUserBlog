@@ -1,0 +1,20 @@
+<%- include ../header %>
+		<div class="container">
+		<%- include _profile_sidebar %>	
+			<div class="main">
+				<div class="main-header">
+					<h2><%= title %></h2>
+				</div>
+				<div class="main-content">
+					<form action="/center/profile-basic" method="post" id="profile-basic">
+						<table>
+							<tr><th>昵称：</th><td><input type="text" name="nickname" value="<%= user.nickname %>" /></td></tr>
+							<tr><th>QQ：</th><td><input type="text" name="qq"  value="<%= user.qq %>" /></td></tr>
+							<tr><th>Weibo：</th><td><input type="text" name="weibo" value="<%= user.weibo %>" /></td></tr>
+							<tr><th></th><td><input type="submit" value="更新" /></td></tr>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+<%- include ../footer %>

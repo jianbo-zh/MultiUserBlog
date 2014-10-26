@@ -13,6 +13,8 @@ var fTagModify = require('../filter/tagModify.js');
 var fMessageAdd = require('../filter/messageAdd.js');
 var fMessageReply = require('../filter/messageReply.js');
 var fCommentAdd = require('../filter/commentAdd.js');
+var fUserUpdateBasic = require('../filter/userUpdateBasic.js');
+var fUserResetPassword = require('../filter/userResetPassword.js');
 
 var UserModel = require('../model/user.js');
 var PostModel = require('../model/post.js');
@@ -58,14 +60,16 @@ router.get('/posts', getPosts);
  * 获取新建文章
  */
 router.get('/post', function(req, res){
-	var data = req.data;
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
 	data.title = "新增文章";
 	data.preCss = data.preCss + "\n" + commonFn.css(['kindeditor.css']);
 	data.preJs = data.preJs + "\n" + commonFn.js(['jquery.form.js', 'kindeditor.js', 'kindeditor_zh.js']);
 	data.sufJs = commonFn.editor("content") + "\n" + commonFn.js(['postAdd.js']);
 	data.current = 'posts';
 
-	CategoryModel.getCategoriesOfUser(data.user.id, function(err, categories){
+	CategoryModel.getCategoriesOfUser(data.user.id, offset, limit, function(err, categories){
 		if(err){
 			return res.send('发生错误！'+err.message);
 		}
@@ -76,7 +80,9 @@ router.get('/post', function(req, res){
 
 router.get('/post/:id', function(req, res){
 	var postId = req.params.id,
-		data = req.data;
+		data = req.data,
+		offset = 0,
+		limit = 1000;
 	data.title = "修改文章";
 	data.preCss = data.preCss + "\n" + commonFn.css(['kindeditor.css']);
 	data.preJs = data.preJs + "\n" + commonFn.js(['jquery.form.js', 'kindeditor.js', 'kindeditor_zh.js']);
@@ -94,7 +100,7 @@ router.get('/post/:id', function(req, res){
 		}
 		async.parallel({
 			categories : function(callback){
-				CategoryModel.getCategoriesOfUser(data.user.id, callback);
+				CategoryModel.getCategoriesOfUser(data.user.id, offset, limit, callback);
 			},
 			category : function(callback){
 				CategoryModel.getById(post.categoryId, callback);
@@ -227,7 +233,9 @@ router.post('/category', function(req, res){
 
 router.get('/category/:id', function(req, res){
 	var data = req.data,
-	categoryId = parseInt(req.params.id);
+		offset = 0,
+		limit = 1000,
+		categoryId = parseInt(req.params.id);
 	data.urlFn = commonFn.url;
 	data.current = 'categories';
 
@@ -237,7 +245,7 @@ router.get('/category/:id', function(req, res){
 		},
 		posts : function(callback){
 
-			PostModel.getPostsByCategory(categoryId, function(err, posts){
+			PostModel.getPostsByCategory(categoryId, offset, limit, function(err, posts){
 
 				async.eachSeries(posts, function(post, callback){
 
@@ -282,7 +290,9 @@ router.get('/category/:id', function(req, res){
 });
 
 router.get('/tag/:id', function(req, res){
-	var data = req.data;
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
 	data.current = 'tags';
 	data.urlFn = commonFn.url;
 	tagId = parseInt(req.params.id);
@@ -292,7 +302,7 @@ router.get('/tag/:id', function(req, res){
 			TagModel.getTagById(tagId, callback);
 		},
 		posts : function(callback){
-			TagModel.getRelByTagId(tagId, function(err, rels){
+			TagModel.getRelsByTagId(tagId, offset, limit, function(err, rels){
 				if(err){
 					return callback(err);
 				}
@@ -387,12 +397,14 @@ router.delete('/category/:id', function(req, res){
  * @param  {object} res 响应对象
  */
 router.get('/categories', function(req, res){
-	var data = req.data;
+	var data = req.data,
+		offset = 0,
+		limit = 1000;
 	data.title = '所有分类';
 	data.sufJs = commonFn.js(['jquery.form.js', 'category.js']);
 	data.current = 'categories';
 
-	CategoryModel.getCategoriesOfUser(data.user.id, function(err, categories){
+	CategoryModel.getCategoriesOfUser(data.user.id, offset, limit, function(err, categories){
 		if(err){
 			return res.send('发生错误！'+err.message);
 		}
@@ -423,11 +435,13 @@ router.get('/categories', function(req, res){
  * @param  {object} res 响应对象
  */
 router.get('/tags', function(req, res){
-	var data = req.data;
-		data.title = '所有标签';
-		data.sufJs = commonFn.js('tags.js');
-		data.current = 'tags';
-	TagModel.getTagsOfUser(data.user.id, function(err, tags){
+	var data = req.data,
+		offset = 0,
+		limit =1000;
+	data.title = '所有标签';
+	data.sufJs = commonFn.js('tags.js');
+	data.current = 'tags';
+	TagModel.getTagsOfUser(data.user.id, offset, limit, function(err, tags){
 		if(err){
 			return res.send('发生错误！'+err.message);
 		}
@@ -1178,6 +1192,76 @@ router.post('/comment', function(req, res){
 		var comment = new CommentModel(data.user.id, comment);
 
 		comment.add(function(err, commentId){
+			if(err){
+				return res.send({status:'fail', message:'发生错误！'+err.message});
+			}
+			return res.send({status:'success'});
+		});
+	});
+});
+
+/**
+ * 个人设置表单
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.get('/profile-basic', function(req, res){
+	var data = req.data;
+	data.title = '个人设置';
+	data.current = 'basic';
+	data.sufJs = commonFn.js(['jquery.form.js', 'profileBasic.js']);
+	res.render('center/profileBasic', data);
+});
+
+/**
+ * 修改个人信息
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.post('/profile-basic', function(req, res){
+	var data = req.data;
+	fUserUpdateBasic.run(data.user.id, req.body, function(err, user){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		UserModel.updateBasic(data.user.id, user, function(err, result){
+			if(err){
+				return res.send({status:'fail', message:'发生错误！'+err.message});
+			}
+			// 更新当前帐号session
+			req.session.user.nickname = user.nickname;
+			req.session.user.qq = user.qq;
+			req.session.user.weibo = user.weibo;
+			return res.send({status:'success'});
+		});
+	});
+});
+
+/**
+ * 个人设置表单
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.get('/profile-password', function(req, res){
+	var data = req.data;
+	data.title = '个人设置';
+	data.current = 'password';
+	data.sufJs = commonFn.js(['jquery.form.js', 'profilePassword.js']);
+	res.render('center/profilePassword', data);
+});
+
+/**
+ * 修改个人信息
+ * @param  {object} req 请求对象
+ * @param  {object} res 响应对象
+ */
+router.post('/profile-password', function(req, res){
+	var data = req.data;
+	fUserResetPassword.run(data.user.id, req.body, function(err, password){
+		if(err){
+			return res.send({status:'fail', message:'发生错误！'+err.message});
+		}
+		UserModel.updatePassword(data.user.id, password, function(err, result){
 			if(err){
 				return res.send({status:'fail', message:'发生错误！'+err.message});
 			}
